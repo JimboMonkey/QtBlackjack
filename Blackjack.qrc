@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/Images">
+        <file>BustText.gif</file>
+        <file>ResultsSummary.png</file>
+        <file>StatusBubble.png</file>
+        <file>Background4.png</file>
+        <file>Bet_Ring2.gif</file>
+        <file>StackSpot.png</file>
+        <file>Background2.png</file>
+        <file>DoneGreenButtonSmall.png</file>
+        <file>DoneRedButtonSmall.png</file>
+        <file>DoubleButtonSmall.png</file>
+        <file>Background3.png</file>
+        <file>HitButtonSmall.png</file>
+        <file>NoButtonSmall.png</file>
+        <file>HandValueSpot.png</file>
+        <file>SplitButtonSmall.png</file>
+        <file>StandButtonSmall.png</file>
+        <file>SurrenderButtonSmall.png</file>
+        <file>YesButtonSmall.png</file>
+        <file>Background.png</file>
+        <file>Background.jpg</file>
+        <file>BlackjackText.gif</file>
+    </qresource>
+</RCC>
