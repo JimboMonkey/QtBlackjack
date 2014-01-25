@@ -12,7 +12,7 @@ class Table
 		void AddBox(Box* NewBox, const int BoxIndex);
 		void RemoveBox(const int BoxIndex);
 		void ListPlayers() const;
-		const int CountBoxes() const;
+		int CountBoxes() const;
 		Box* GetBox(const int BoxIndex);
 		void RemoveSplits();
 		void Clear();

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sun Dec 8 00:39:54 2013
+** Created: Sat Jan 25 23:27:52 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      24,   14, // methods
+      23,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -56,7 +56,6 @@ static const uint qt_meta_data_MainWindow[] = {
      759,   11,   11,   11, 0x08,
      775,   11,   11,   11, 0x08,
      793,   11,   11,   11, 0x08,
-     811,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -66,11 +65,11 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "LoadCardName,CardPosition\0"
     "updateDealersHand(QString,int)\0"
     "updatePlayersHand(QString,int)\0HandValue\0"
-    "updatePlayersHandValue(QString)\0"
-    "updateDealersHandValue(QString)\0"
+    "UpdatePlayersHandValue(QString)\0"
+    "UpdateDealersHandValue(QString)\0"
     "StackValue\0updateStackValue(QString)\0"
-    "BetValue\0updateBetValue(QString)\0"
-    "clearPlayersHand()\0clearDealersHand()\0"
+    "BetValue\0UpdateBetValue(QString)\0"
+    "ClearPlayersHand()\0ClearDealersHand()\0"
     "Status\0updateGameStatus(QString)\0"
     "HitVisible,StandVisible,SurrenderVisible,DoubleVisible,SplitVisible,Ye"
     "sVisible,NoVisible,DoneVisible\0"
@@ -83,8 +82,7 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "ActiveState\0DisableChips(bool)\0"
     "PositionYesNo()\0PlayWinSound()\0"
     "PlayLoseSound()\0PlayChipSound()\0"
-    "toggleStatusbar()\0DisplayAboutBox()\0"
-    "MakeConnections()\0"
+    "DisplayAboutBox()\0MakeConnections()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -96,12 +94,12 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 0: _t->threadStop(); break;
         case 1: _t->updateDealersHand((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 2: _t->updatePlayersHand((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
-        case 3: _t->updatePlayersHandValue((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 4: _t->updateDealersHandValue((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 3: _t->UpdatePlayersHandValue((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 4: _t->UpdateDealersHandValue((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 5: _t->updateStackValue((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 6: _t->updateBetValue((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 7: _t->clearPlayersHand(); break;
-        case 8: _t->clearDealersHand(); break;
+        case 6: _t->UpdateBetValue((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 7: _t->ClearPlayersHand(); break;
+        case 8: _t->ClearDealersHand(); break;
         case 9: _t->updateGameStatus((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 10: _t->HideButtons((*reinterpret_cast< bool(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2])),(*reinterpret_cast< bool(*)>(_a[3])),(*reinterpret_cast< bool(*)>(_a[4])),(*reinterpret_cast< bool(*)>(_a[5])),(*reinterpret_cast< bool(*)>(_a[6])),(*reinterpret_cast< bool(*)>(_a[7])),(*reinterpret_cast< bool(*)>(_a[8]))); break;
         case 11: _t->ResultText((*reinterpret_cast< bool(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2])),(*reinterpret_cast< bool(*)>(_a[3])),(*reinterpret_cast< bool(*)>(_a[4]))); break;
@@ -114,9 +112,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 18: _t->PlayWinSound(); break;
         case 19: _t->PlayLoseSound(); break;
         case 20: _t->PlayChipSound(); break;
-        case 21: _t->toggleStatusbar(); break;
-        case 22: _t->DisplayAboutBox(); break;
-        case 23: _t->MakeConnections(); break;
+        case 21: _t->DisplayAboutBox(); break;
+        case 22: _t->MakeConnections(); break;
         default: ;
         }
     }
@@ -154,9 +151,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 24)
+        if (_id < 23)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 24;
+        _id -= 23;
     }
     return _id;
 }

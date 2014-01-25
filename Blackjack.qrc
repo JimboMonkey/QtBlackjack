@@ -1,16 +1,13 @@
 <RCC>
     <qresource prefix="/Images">
         <file>BustText.gif</file>
-        <file>ResultsSummary.png</file>
         <file>StatusBubble.png</file>
         <file>Background4.png</file>
         <file>Bet_Ring2.gif</file>
         <file>StackSpot.png</file>
-        <file>Background2.png</file>
         <file>DoneGreenButtonSmall.png</file>
         <file>DoneRedButtonSmall.png</file>
         <file>DoubleButtonSmall.png</file>
-        <file>Background3.png</file>
         <file>HitButtonSmall.png</file>
         <file>NoButtonSmall.png</file>
         <file>HandValueSpot.png</file>
@@ -18,8 +15,18 @@
         <file>StandButtonSmall.png</file>
         <file>SurrenderButtonSmall.png</file>
         <file>YesButtonSmall.png</file>
-        <file>Background.png</file>
-        <file>Background.jpg</file>
         <file>BlackjackText.gif</file>
+        <file>ResultsSummary.gif</file>
+    </qresource>
+    <qresource prefix="/Sounds">
+        <file>Yeah.mp3</file>
+        <file>DrawCard.mp3</file>
+        <file>Bust.mp3</file>
+        <file>Ching.mp3</file>
+        <file>Chip.mp3</file>
+        <file>Chip3.mp3</file>
+        <file>Chip2.mp3</file>
+        <file>Gasp.mp3</file>
+        <file>Punch.mp3</file>
     </qresource>
 </RCC>

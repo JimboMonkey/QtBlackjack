@@ -16,12 +16,12 @@ class Participant: public QObject
 	Q_OBJECT
 
 	public:
-		const int CheckHand() const;
+		int CheckHand() const;
 		void TakeCard(const Card& DealtCard);
 		QString StatusResult() const;
 		void ListHand();
 		const string CheckCard(const int CardIndex) const;
-		const int CountCards() const;
+		int CountCards() const;
 		void SoftenAce();	
 
 	protected:

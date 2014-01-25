@@ -3,6 +3,7 @@
 #define BOX_HPP
 
 #include <vector>
+#include <QtGui>
 
 #include "Player.hpp"
 #include "Card.hpp"
@@ -18,15 +19,15 @@ class Box: public Participant
 		Player* GetOwnerObj() const;
 		void Status();
 		void PlaceBet(const float NewBet);
-		const float CountBet() const;
+		float CountBet() const;
 		void RetrieveBet();
 		void ReceiveWinnings();
 		float CountStack() const;
 		void PlaceInsurance();
-		const bool CheckInsurance() const;
+		bool CheckInsurance() const;
 		void ReceiveInsurance();
 		void Surrender();
-		const bool CheckSurrended() const;
+		bool CheckSurrended() const;
 		const Card MoveSplitCard();
 		bool CheckSplit() const;
 		void ReturnCards();

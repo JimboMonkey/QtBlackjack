@@ -8,7 +8,7 @@
 /* List all cards of the current hand */
 void Participant::ListHand()
 {
-	int i;
+	unsigned int i;
 	
 	for(i = 0; i < Hand.size(); i++)
 	{
@@ -50,13 +50,13 @@ QString Participant::StatusResult() const
 }
 
 /* Check the value of the current hand */
-const int Participant::CheckHand() const
+int Participant::CheckHand() const
 {
 	return HandValue;
 }
 
 /* Return the number of cards in the current hand */
-const int Participant::CountCards() const
+int Participant::CountCards() const
 {
 	return Hand.size();
 }

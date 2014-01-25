@@ -39,7 +39,7 @@ float Box::CountStack() const
 }
 
 /* Return the bet placed on the current box */
-const float Box::CountBet() const
+float Box::CountBet() const
 {
 	return Bet;
 }
@@ -49,27 +49,27 @@ void Box::PlaceBet(const float NewBet)
 {
 	Owner->PlaceBet(NewBet);
 	Bet += NewBet;
-	cout << "Bet is now " << Bet << endl;
+	qDebug() << "Bet is now " << Bet;
 	emit updateBet(QString::number(Bet));
 }
 
 void Box::IncreaseBet(const float BetIncrease)
 {
 	// Remove from stack
-	cout << "Increasing bet by " << BetIncrease << endl;
+	qDebug() << "Increasing bet by " << BetIncrease;
 	Owner->PlaceBet(BetIncrease);
 	Bet += BetIncrease;
-	cout << endl << endl << "Bet stands at " << Bet << endl << endl;
+	qDebug() << "Bet stands at " << Bet;
 	emit updateBet(QString::number(Bet));
 }
 
 void Box::DecreaseBet(const float BetDecrease)
 {
 	// Return to stack
-	cout << "Decreasing bet by " << BetDecrease << endl;
+	qDebug() << "Decreasing bet by " << BetDecrease;
 	Owner->AddToStack(BetDecrease);
 	Bet -= BetDecrease;
-	cout << endl << endl << "Bet stands at " << Bet << endl << endl;
+	qDebug() << "Bet stands at " << Bet;
 	emit updateBet(QString::number(Bet));
 }
 
@@ -81,13 +81,13 @@ void Box::Surrender()
 }
 
 /* Check to see if the current box surrended */
-const bool Box::CheckSurrended() const
+bool Box::CheckSurrended() const
 {
 	return Surrended;
 }
 
 /* Check if the current box has taken insurance */
-const bool Box::CheckInsurance() const
+bool Box::CheckInsurance() const
 {
 	return UsingInsurance;
 }
@@ -120,9 +120,9 @@ void Box::ReturnToStack(int ReturnedChipValue)
 	Owner->AddToStack(ReturnedChipValue);
 	Bet -= ReturnedChipValue;
 	emit updateBet(QString::number(Bet));
-	cout << "Bet is now " << Bet << endl;
-	cout << "  Chip of " << ReturnedChipValue << " returned to stack" << endl;
-	cout << "Box Bet stands at " << CountBet() << endl;
+	qDebug() << "Bet is now " << Bet;
+	qDebug() << "  Chip of " << ReturnedChipValue << " returned to stack";
+	qDebug() << "Box Bet stands at " << CountBet();
 }
 
 /* Receive winnings of a bet  - covers blackjack and 'normal' wins*/
@@ -148,7 +148,7 @@ const Card Box::MoveSplitCard()
 	Card TempCard;
 
 	TempCard = Hand.at(1);
-	cout << "TempCard = " << TempCard.GetName() << " (" << TempCard.GetValue() << ")" << " of " << TempCard.GetSuit() << endl;
+	qDebug() << "TempCard = " << TempCard.GetName() << " (" << TempCard.GetValue() << ") of " << TempCard.GetSuit();
 	HandValue -= Hand.at(1).GetValue();
 	Hand.pop_back();
 	/* AcesHeld must be reassessed after a split */

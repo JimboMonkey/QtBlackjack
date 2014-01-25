@@ -112,13 +112,13 @@ class MainWindow: public QMainWindow
 	private slots:
 		void updateDealersHand(QString LoadCardName, int CardPosition);
 		void updatePlayersHand(QString LoadCardName, int CardPosition);
-		void updatePlayersHandValue(QString HandValue);
-		void updateDealersHandValue(QString HandValue);
+		void UpdatePlayersHandValue(QString HandValue);
+		void UpdateDealersHandValue(QString HandValue);
 		void updateStackValue(QString StackValue);
-		void updateBetValue(QString BetValue);
+		void UpdateBetValue(QString BetValue);
 	//	void updatePlayersName(QString PlayersName);
-		void clearPlayersHand();
-		void clearDealersHand();
+		void ClearPlayersHand();
+		void ClearDealersHand();
 		void updateGameStatus(QString Status);
 		void HideButtons(bool HitVisible, bool StandVisible, bool SurrenderVisible, bool DoubleVisible, bool SplitVisible, bool YesVisible, bool NoVisible, bool DoneVisible);
 		void ResultText(bool BustVisible, bool DealerBustVisible, bool BlackjackVisible, bool DealerBlackjackVisible);
@@ -131,17 +131,12 @@ class MainWindow: public QMainWindow
 		void PlayWinSound();
 		void PlayLoseSound();
 		void PlayChipSound();
-		void toggleStatusbar();
 		void DisplayAboutBox();
 		void MakeConnections();
 
 	signals:
 		void threadStop();	
 
-	/*	void NewGame();
-		void About();
-		void ToggleSound();
-		void Exit();*/
 };
 
 

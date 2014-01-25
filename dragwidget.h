@@ -5,7 +5,7 @@
 #include <QFrame>
 #include <QStackedWidget>
 #include <vector>
-#include "mylabel.h"
+#include "Chip.h"
 
 class QDragEnterEvent;
 class QDropEvent;
@@ -15,18 +15,17 @@ class DragWidget: public QStackedWidget
 	Q_OBJECT
 
 	public:
-		DragWidget(QWidget *parent=0);
+		DragWidget(QWidget *parent=0, bool=false);
 		int pos;
 		void populate(int);
-		void AddChip(MyLabel* MyChip);
+		void AddChip(Chip* MyChip);
 		void RemoveChip();
 		void setInactive(bool activeState);
-//		void ClearChips();
 		float XScalingFactor;
 		float YScalingFactor;
 
 	private:
-		std::vector<MyLabel*> ListChips;
+		std::vector<Chip*> ListChips;
 		bool Active;
 		
 
@@ -37,8 +36,6 @@ class DragWidget: public QStackedWidget
 	    void mousePressEvent(QMouseEvent *event);
 
 	signals:
-		void BetPlaced(int);
-		void BetReturned(int);
 		void AddToBet(float);
 		void RemoveFromBet(float);
 		void PlayChipSound();

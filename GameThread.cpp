@@ -17,7 +17,7 @@ GameThread::GameThread()
 
 GameThread::~GameThread()
 {
-	cout << "arghhh you've destroyed me!" << endl;
+	qDebug() << "arghhh you've destroyed me!" << endl;
 }
 
 /* Use ANSI escape codes to clear the screen */
@@ -27,7 +27,7 @@ void GameThread::ClearScreen()
 }
 
 /* Return the number of players */
-const int GameThread::CountPlayers()
+int GameThread::CountPlayers()
 {
 	string UserEntry;
 	int NumberOfPlayers;
@@ -96,7 +96,6 @@ void GameThread::CollectBets(Table& BlackJackTable)
 {
 	int BoxIndex;
 	string UserEntry;
-	int NewBet;
 
 	QEventLoop eventLoop;
 	connect(this, SIGNAL(BetDone()), &eventLoop, SLOT(quit()));
@@ -114,9 +113,9 @@ void GameThread::CollectBets(Table& BlackJackTable)
 			cout << CurrentBox->GetOwner() << ", place your bet (" << CurrentBox->CountStack() << " in your stack. Multiples of " << MinimumBet << " only):" << endl;
 			emit updateStatus("Place your bet");
 			eventLoop.exec();
-//			cout << "Bet is " << CheckBetValue() << endl;
-			cout << "Bet is " << CurrentBox->CountBet() << endl;
-			cout << "CheckChoice = " << CheckChoice() << endl;
+//			qDebug() << "Bet is " << CheckBetValue() << endl;
+			qDebug() << "Bet is " << CurrentBox->CountBet() << endl;
+			qDebug() << "CheckChoice = " << CheckChoice() << endl;
 //	   		getline(cin, UserEntry);
 	//		stringstream StrToInt(UserEntry); 
 	//		StrToInt >> NewBet;
@@ -421,7 +420,7 @@ int GameThread::CheckBetValue()
 
 void GameThread::ChoiceMade(int ButtonIndex)
 {
-	cout << "button " << ButtonIndex << " was pressed" << endl;
+	qDebug() << "button " << ButtonIndex << " was pressed" << endl;
 	SetChoice(ButtonIndex);
 	emit Choice();
 }
@@ -432,7 +431,7 @@ void GameThread::RemoveFromStack(int BetValue)
 	CurrentBox->PlaceBet(BetValue);
 //	emit thUpdateBet(BetValue);
 	emit ButtonVisibility(false, false, false, false, false, false, false, true);
-	cout << "did this work?\n";
+	qDebug() << "did this work?\n";
 }
 
 void GameThread::ClearBet()
@@ -442,19 +441,19 @@ void GameThread::ClearBet()
 
 void GameThread::BettingDone()
 {
-	cout << "betting done!" << endl;
+	qDebug() << "betting done!" << endl;
 	emit BetDone();
 }
 
 void GameThread::hello(QString LoadCardName, int CardPosition)
 {
-	cout << endl << "Am I used????" << endl;
+	qDebug() << endl << "Am I used????" << endl;
 	emit updateDealersHand(LoadCardName, CardPosition);
 }
 
 void GameThread::goodbye(QString LoadCardName, int CardPosition)
 {
-	cout << endl << "How about me????" << endl;
+	qDebug() << endl << "How about me????" << endl;
 	emit updatePlayersHand(LoadCardName, CardPosition);
 }
 
@@ -475,7 +474,7 @@ void GameThread::thUpdateStack(QString StackValue)
 
 void GameThread::thUpdateBet(float BetValue)
 {
-	cout << "bet updated to " << BetValue << endl;
+	qDebug() << "bet updated to " << BetValue << endl;
 //	emit updateBet(QString::number(BetValue));
 }
 
@@ -486,7 +485,7 @@ void GameThread::thUpdateBet(float BetValue)
 
 
 /* Every player plays their hands */
-const bool GameThread::PlayersPlay(Table& BlackJackTable, Croupier& Dealer)
+bool GameThread::PlayersPlay(Table& BlackJackTable, Croupier& Dealer)
 {
 	int BoxIndex;
 	string Choice;
@@ -574,7 +573,7 @@ const bool GameThread::PlayersPlay(Table& BlackJackTable, Croupier& Dealer)
 				{
 					PlayersStanding = false;
 					//ClearScreen();
-					cout << endl << "Player trying to start a new game...." << endl;
+					qDebug() << endl << "Player trying to start a new game...." << endl;
 					return PlayersStanding;
 				}
 				/* Certain plays can only happen if player is holding two cards (regardless of whether first go or not) */
@@ -965,7 +964,7 @@ void GameThread::SettleBets(Table& BlackJackTable, Croupier& Dealer)
 
 void GameThread::ReturnBet(int ReturnedChipValue)
 {
-	cout << "You returned a chip of value = " << ReturnedChipValue << endl;
+	qDebug() << "You returned a chip of value = " << ReturnedChipValue << endl;
 	Box* CurrentBox = BlackJackTable.GetBox(0);
 	CurrentBox->ReturnToStack(ReturnedChipValue);
 //	emit thUpdateBet(QString::number(CheckBetValue()));

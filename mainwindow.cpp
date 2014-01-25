@@ -26,11 +26,12 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 	XScalingFactor = wScale;
 	YScalingFactor = hScale;
 
- //   ui->setupUi(this);
-
+	// Setup sound object
 	media = new Phonon::MediaObject(this);
 	createPath(media, new Phonon::AudioOutput(Phonon::MusicCategory, this));
 
+	// Group the sets of cards to make
+	// it easier to move them together
 	PlayersCards = new QGroupBox(this);
 	DealersCards = new QGroupBox(this);
 
@@ -50,24 +51,25 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 		posXDealer += 19;
 
 		DealersHand[a] = new QLabel(DealersCards);
-//		DealersHand[a]->setGeometry(posXDealer, 50, 191, 250);
 		DealersHand[a]->setGeometry(posXDealer*XScalingFactor, 0, 191*XScalingFactor, 250*YScalingFactor);
 		DealersHand[a]->lower();
 
 		PlayersHand[a] = new QLabel(PlayersCards);
-//		PlayersHand[a]->setGeometry(posX, 310, 191, 250);
 		PlayersHand[a]->setGeometry(posX*XScalingFactor, 0, 191*XScalingFactor, 250*YScalingFactor);
 		PlayersHand[a]->lower();
 	}
 
+	// Create a set of menu actions
   	NewGame = new QAction("&New Game", this);
 	ToggleSound = new QAction("&Toggle Sound", this);
 	About = new QAction("&About", this);
 	Quit = new QAction("&Quit", this);
 
+	// Allow ToggleSound action to be checkable
 	ToggleSound->setCheckable(true);
 	ToggleSound->setChecked(true);
 
+	// Create a menu and populate it with actions
 	QMenu *Menu;
 	Menu = menuBar()->addMenu("&Menu");
 	Menu->addAction(NewGame);
@@ -75,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 	Menu->addAction(About);
 	Menu->addAction(Quit);
 
-	connect(ToggleSound, SIGNAL(triggered()), this, SLOT(toggleStatusbar()));
+	// Link menu actions to functions
 	connect(About, SIGNAL(triggered()), this, SLOT(DisplayAboutBox()));
 	connect(Quit, SIGNAL(triggered()), qApp, SLOT(quit()));
 
@@ -131,7 +133,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
 	labelResultsBubble = new QLabel(this);
 	labelResultsBubble->setGeometry(25*XScalingFactor, 250*YScalingFactor, 567*XScalingFactor, 165*YScalingFactor);
-	QPixmap ResultsBubblePixMap(":/Images/ResultsSummary.png");
+	QPixmap ResultsBubblePixMap(":/Images/ResultsSummary.gif");
 	labelResultsBubble->setScaledContents(true);	
 	labelResultsBubble->setPixmap(ResultsBubblePixMap);
 	labelResultsBubble->setVisible(false);
@@ -208,32 +210,32 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 	labelDealersBlackjackText->setScaledContents(true);
 	labelDealersBlackjackText->setVisible(false);
 
-    newSWd = new DragWidget(this);
+    newSWd = new DragWidget(this, false);
 	newSWd->populate(5);
 	newSWd->setGeometry(15*XScalingFactor, 690*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
 	newSWd->raise();
 
-	newSWd2 = new DragWidget(this);
+	newSWd2 = new DragWidget(this, false);
 	newSWd2->populate(10);
 	newSWd2->setGeometry(135*XScalingFactor, 705*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
 	newSWd2->raise();
 
-	newSWd3 = new DragWidget(this);	
+	newSWd3 = new DragWidget(this, false);	
 	newSWd3->populate(25);
 	newSWd3->setGeometry(265*XScalingFactor, 715*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
 	newSWd3->raise();
 
-	newSWd4 = new DragWidget(this);	
+	newSWd4 = new DragWidget(this, false);	
 	newSWd4->populate(50);
 	newSWd4->setGeometry(385*XScalingFactor, 705*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
 	newSWd4->raise();
 
-	newSWd5 = new DragWidget(this);	
+	newSWd5 = new DragWidget(this, false);	
 	newSWd5->populate(100);
 	newSWd5->setGeometry(500*XScalingFactor, 690*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
 	newSWd5->raise();
 
-	myDragWidget = new DragWidget(this);
+	myDragWidget = new DragWidget(this, true);
 	myDragWidget->populate(200);
 //	myDragWidget->setGeometry(267, 414, 88, 200);
 	myDragWidget->setGeometry(210*XScalingFactor, 414*YScalingFactor, 200*XScalingFactor, 220*YScalingFactor);
@@ -296,20 +298,14 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 	myThread = new GameThread();
 	connect(myThread, SIGNAL(updatePlayersHand(QString,int)), this, SLOT(updatePlayersHand(QString,int)));
 	connect(myThread, SIGNAL(updateDealersHand(QString,int)), this, SLOT(updateDealersHand(QString,int)));
-	connect(myThread, SIGNAL(updateDealersHandValue(QString)), this, SLOT(updateDealersHandValue(QString)));
-	connect(myThread, SIGNAL(updatePlayersHandValue(QString)), this, SLOT(updatePlayersHandValue(QString)));
+	connect(myThread, SIGNAL(updateDealersHandValue(QString)), this, SLOT(UpdateDealersHandValue(QString)));
+	connect(myThread, SIGNAL(updatePlayersHandValue(QString)), this, SLOT(UpdatePlayersHandValue(QString)));
 	connect(myThread, SIGNAL(updateStack(QString)), this, SLOT(updateStackValue(QString)));
-	connect(myThread, SIGNAL(updateBet(QString)), this, SLOT(updateBetValue(QString)));
+	connect(myThread, SIGNAL(updateBet(QString)), this, SLOT(UpdateBetValue(QString)));
 	connect(myDragWidget, SIGNAL(AddToBet(float)), myThread, SIGNAL(IncreaseBet(float)));
 	connect(myDragWidget, SIGNAL(RemoveFromBet(float)), myThread, SIGNAL(DecreaseBet(float)));
-/*	connect(newSWd, SIGNAL(RemoveFromBet(float)), myThread, SIGNAL(DecreaseBet(float)));
-	connect(newSWd2, SIGNAL(RemoveFromBet(float)), myThread, SIGNAL(DecreaseBet(float)));
-	connect(newSWd3, SIGNAL(RemoveFromBet(float)), myThread, SIGNAL(DecreaseBet(float)));
-	connect(newSWd4, SIGNAL(RemoveFromBet(float)), myThread, SIGNAL(DecreaseBet(float)));
-	connect(newSWd5, SIGNAL(RemoveFromBet(float)), myThread, SIGNAL(DecreaseBet(float)));*/
-	//connect(myThread, SIGNAL(updatePlayersName(QString)), this, SLOT(updatePlayersName(QString)));
-	connect(myThread, SIGNAL(clearPlayersHand()), this, SLOT(clearPlayersHand()));
-	connect(myThread, SIGNAL(clearDealersHand()), this, SLOT(clearDealersHand()));
+	connect(myThread, SIGNAL(clearPlayersHand()), this, SLOT(ClearPlayersHand()));
+	connect(myThread, SIGNAL(clearDealersHand()), this, SLOT(ClearDealersHand()));
 	connect(myThread, SIGNAL(updateStatus(QString)), this, SLOT(updateGameStatus(QString)));
 	connect(myThread, SIGNAL(updateResultsSummary(QString)), this, SLOT(updateResultsSummary(QString)));
 	connect(myThread, SIGNAL(HideResultsSummary()), this, SLOT(HideResultsSummary()));
@@ -328,15 +324,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 	connect(newSWd3, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
 	connect(newSWd4, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
 	connect(newSWd5, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
-
-	// Placing bet
-	/*connect(myDragWidget, SIGNAL(BetPlaced(int)), myThread, SLOT(RemoveFromStack(int)));
-	connect(myDragWidget, SIGNAL(BetReturned(int)), myThread, SLOT(ReturnBet(int)));
-	connect(newSWd, SIGNAL(BetReturned(int)), myThread, SLOT(ReturnBet(int)));
-	connect(newSWd2, SIGNAL(BetReturned(int)), myThread, SLOT(ReturnBet(int)));
-	connect(newSWd3, SIGNAL(BetReturned(int)), myThread, SLOT(ReturnBet(int)));
-	connect(newSWd4, SIGNAL(BetReturned(int)), myThread, SLOT(ReturnBet(int)));
-	connect(newSWd5, SIGNAL(BetReturned(int)), myThread, SLOT(ReturnBet(int)));*/
 
 	// #1
     QSignalMapper *m_sigmapper;
@@ -388,18 +375,6 @@ MainWindow::~MainWindow()
 {
 	//delete myThread;
     delete ui;
-}
-
-void MainWindow::toggleStatusbar()
-{
-	if (ToggleSound->isChecked())
-	{
-		printf("IS checked!\n");
-	}
-	else
-	{
-		printf("IS NOT checked!\n");
-	}
 }
 
 void MainWindow::MakeConnections()
@@ -456,8 +431,8 @@ void MainWindow::DisplayAboutBox()
 //	msgBox.setInformativeText("Another JimboMonkey Production");
 	msgBox.setIconPixmap(AboutBoxPixMap);
 	QPushButton *LicenceButton = msgBox.addButton("&Licence", QMessageBox::ActionRole);
-	QPushButton *CreditsButton = msgBox.addButton("&Credits", QMessageBox::AcceptRole);
-	QPushButton *OkButton = msgBox.addButton("OK", QMessageBox::AcceptRole);
+//	QPushButton *CreditsButton = msgBox.addButton("&Credits", QMessageBox::AcceptRole);
+//	QPushButton *OkButton = msgBox.addButton("OK", QMessageBox::AcceptRole);
 	LicenceButton->setGeometry(50, 300, 100, 100);
 	connect(LicenceButton, SIGNAL(clicked()), this, SLOT(PlayWinSound()));
 	msgBox.exec();
@@ -506,20 +481,21 @@ void MainWindow::ResultText(bool BustVisible, bool DealerBustVisible, bool Black
 	labelBlackjackText->raise();
 	labelDealersBlackjackText->raise();
 
-	if(BustVisible == true or DealerBustVisible == true)
-	{
-		media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Bust.mp3"));
-	}
-	else if(BlackjackVisible == true)
-	{
-		media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Yeah.mp3"));
-	}
-	else if(DealerBlackjackVisible == true)
-	{
-		media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Gasp.mp3"));
-	}
+	// Only play if sound is enabled
 	if (ToggleSound->isChecked())
 	{
+		if(BustVisible == true or DealerBustVisible == true)
+		{
+			media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Bust.mp3"));
+		}
+		else if(BlackjackVisible == true)
+		{
+			media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Yeah.mp3"));
+		}
+		else if(DealerBlackjackVisible == true)
+		{
+			media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Gasp.mp3"));
+		}
 		media->play();
 	}
 }
@@ -533,6 +509,7 @@ void MainWindow::updatePlayersHand(QString LoadCardName, int CardPosition)
 	if(CardPosition > 1)
 	{
 		media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/DrawCard.mp3"));
+		// Only play if sound is enabled
 		if (ToggleSound->isChecked())
 		{
 			media->play();
@@ -567,6 +544,7 @@ void MainWindow::updateDealersHand(QString LoadCardName, int CardPosition)
 	if(CardPosition > 0 and LoadCardName != "DealerCards/CardBack.png")
 	{
 		media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/DrawCard.mp3"));
+		// Only play if sound is enabled
 		if (ToggleSound->isChecked())
 		{
 			media->play();
@@ -584,50 +562,57 @@ void MainWindow::updateDealersHand(QString LoadCardName, int CardPosition)
 	labelDealersHandValue->raise();
 }
 
+// Play a win sound
 void MainWindow::PlayWinSound()
 {
-	media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Ching.mp3"));
+	// Only play if sound is enabled
 	if (ToggleSound->isChecked())
 	{
+		media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Ching.mp3"));
 		media->play();
 	}
 }
 
+// Play a fail sound
 void MainWindow::PlayLoseSound()
 {
-	media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Punch.mp3"));
+	// Only play if sound is enabled
 	if (ToggleSound->isChecked())
 	{
+		media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Punch.mp3"));
 		media->play();
 	}
 }
 
+// Play a random chip movement sound
 void MainWindow::PlayChipSound()
 {
-	int iSecret;
+	int RandomNumber;
 
-	/* initialize random seed: */
-	srand (time(NULL));
-
-	/* generate secret number between 1 and 3: */
-	iSecret = rand() % 3 + 1;
-
-	switch (iSecret)
-	{
-		case 1:
-			media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip.mp3"));
-			break;
-		case 2:
-			media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip2.mp3"));
-			break;
-		case 3:
-			media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip3.mp3"));
-			break;
-	}
+	// Only play if sound is enabled
 	if (ToggleSound->isChecked())
 	{
+		// Initialize random seed from time
+		srand (time(NULL));
+
+		// Generate a random number between 1 and 3
+		RandomNumber = ((rand() % 3) + 1);
+
+		// Pick one of 3 sounds
+		switch (RandomNumber)
+		{
+			case 1:
+				media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip.mp3"));
+				break;
+			case 2:
+				media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip2.mp3"));
+				break;
+			case 3:
+				media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip3.mp3"));
+				break;
+		}
 		media->play();
-	}
+	}	
 }
 
 void MainWindow::updateGameStatus(QString Status)
@@ -651,14 +636,16 @@ void MainWindow::HideResultsSummary()
 	labelResultsBubble->setVisible(false);
 }
 
-void MainWindow::updatePlayersHandValue(QString HandValue)
+// Update the GUI player's hand value
+void MainWindow::UpdatePlayersHandValue(QString HandValue)
 {
 	labelPlayersHandValue->setText(HandValue);
 	labelHandValueSpot->setVisible(true);
 	labelPlayersHandValue->setVisible(true);
 }
 
-void MainWindow::updateDealersHandValue(QString HandValue)
+// Update the GUI dealer's hand value
+void MainWindow::UpdateDealersHandValue(QString HandValue)
 {
 	labelDealersHandValue->setText(HandValue);
 	labelDealersHandValueSpot->setVisible(true);
@@ -716,8 +703,11 @@ void MainWindow::updateStackValue(QString StackValue)
 	}
 }
 
-void MainWindow::updateBetValue(QString BetValue)
+// Update the GUI bet value box
+void MainWindow::UpdateBetValue(QString BetValue)
 {
+	// Don't display the Done button or
+	// any number if the value is zero
 	if(BetValue == "0")
 	{
 		BetValue = "";
@@ -727,39 +717,45 @@ void MainWindow::updateBetValue(QString BetValue)
 	{
 		DoneButton->setVisible(true);
 	}
+	// Write the value to the box
 	labelBetValue->setText(BetValue);
 }
 
-void MainWindow::clearPlayersHand()
+// 'Clear' player's hand by hiding all card labels
+void MainWindow::ClearPlayersHand()
 {
-	for(int a = 0; a < 11; a++)
+	int CardNumber;
+
+	for(CardNumber = 0; CardNumber < 11; CardNumber++)
 	{
-		PlayersHand[a]->hide();
+		PlayersHand[CardNumber]->hide();
 	}
 }
 
-void MainWindow::clearDealersHand()
+// 'Clear' dealer's hand by hiding all card labels
+void MainWindow::ClearDealersHand()
 {
-	for(int a = 0; a < 11; a++)
+	int CardNumber;
+
+	for(CardNumber = 0; CardNumber < 11; CardNumber++)
 	{
-		DealersHand[a]->hide();
+		DealersHand[CardNumber]->hide();
 	}
 }
 
 void MainWindow::Restart()
 {
 	myThread->terminate();
-	printf("called me\n");
+	qDebug() << "called me\n";
 	while(myThread->isFinished() != true)
 	{
-		//printf("not finished");
+
 	}
-	printf("got here\n");
+	qDebug() << "got here\n";
 //	MakeConnections();
 /*	while (ToggleSound->isChecked())
 	{
-	}
-	printf("boooo!");*/
+	}*/
 }
 
 

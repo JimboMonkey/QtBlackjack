@@ -32,7 +32,7 @@ const char *Card::GetName() const
 }
 
 /* Get the value of the card object */
-const int Card::GetValue() const
+int Card::GetValue() const
 {
 	return Value;
 }

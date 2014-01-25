@@ -17,7 +17,7 @@ class Player: public QObject
 //		~Player();
 		const string GetName() const;
 		void PlaceBet(const float NewBet);
-		const float CountStack() const;
+		float CountStack() const;
 		void AddToStack(const float Winnings);
 
 	private:

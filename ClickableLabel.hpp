@@ -12,7 +12,7 @@ class ClickableLabel: public QLabel
 		ClickableLabel(QWidget *parent = 0); 
 
 	protected:
-		void mousePressEvent(QMouseEvent* event);
+		void mousePressEvent();
 
 	signals:
 		void clicked();

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'Participant.hpp'
 **
-** Created: Sat Dec 7 21:18:06 2013
+** Created: Sat Jan 25 23:27:54 2014
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!

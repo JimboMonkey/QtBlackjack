@@ -16,14 +16,14 @@ class GameThread: public QThread
 		~GameThread();
 		void run(); // this is virtual method, we must implement it in our subclass of QThread
 		void ClearScreen();
-		const int CountPlayers();
+		int CountPlayers();
 		void SeatPlayers(Table& BlackJackTable, const int NumberOfPlayers);
 		void CollectBets(Table& BlackJackTable);
 		void InitialDeal(Table& BlackJackTable, Croupier& Dealer);
 		void InsuranceOffers(Table& BlackJackTable, Croupier& Dealer);
 		bool CheckForBlackJack(Table& BlackJackTable, Croupier& Dealer);
 		void StateOptions(Box* CurrentBox, bool PlayersFirstGo);
-		const bool PlayersPlay(Table& BlackJackTable, Croupier& Dealer);
+		bool PlayersPlay(Table& BlackJackTable, Croupier& Dealer);
 		void DealerPlays(Croupier& Dealer);
 		void RefreshPlayerList(Table& BlackJackTable);
 		void SettleBets(Table& BlackJackTable, Croupier& Dealer);

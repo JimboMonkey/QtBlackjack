@@ -24,7 +24,7 @@ const string Player::GetName() const
 }
 
 /* Return the player's stack value */
-const float Player::CountStack() const
+float Player::CountStack() const
 {
 	return Stack;
 }

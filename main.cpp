@@ -5,37 +5,32 @@
 
 int main(int argc, char *argv[])
 {
+	// Create the application and window and name it
 	QApplication app(argc, argv);
-	app.setApplicationName("Blackjack");
     MainWindow window;
 	
-  /*  QPixmap pixmap("Background4.png");
-    QPalette p = window.palette();
-    p.setBrush(QPalette::Base, pixmap);
-    window.setPalette(p);
-    window.resize(25, 15);
-    window.resize(pixmap.size());*/
-
+	// Find out the user's screen resolution
 	QRect Screen = QApplication::desktop()->screenGeometry();
 	qDebug() << "Screen width =" << Screen.width() << "\nScreen height =" << Screen.height();
 
-	float XScalingFactor = Screen.width() / 1920.0;
-	float YScalingFactor = Screen.height() / 1080.0;
-
-	window.setGeometry(300*XScalingFactor, 100*YScalingFactor, 604*XScalingFactor, 812*YScalingFactor);
-	window.setFixedSize(604*XScalingFactor, 812*YScalingFactor);
-
-/*	if(Screen.width() >= 1920)
+	// Set the window geometry using the calculated scaling factors
+	if(Screen.width() >= 1920)
 	{
 		window.setGeometry(300, 100, 604, 812);
 		window.setFixedSize(604, 812);
 	}
+	// User using resolution lower than that used for development
 	else
 	{
-		window.setGeometry(300, 100, 322, 577);
-		window.setFixedSize(322, 577);
-	}*/
+		// Calculate the scaling factors from the resolution
+		float XScalingFactor = Screen.width() / 1920.0;
+		float YScalingFactor = Screen.height() / 1080.0;
 
+		window.setGeometry(300*XScalingFactor, 100*YScalingFactor, 604*XScalingFactor, 812*YScalingFactor);
+		window.setFixedSize(604*XScalingFactor, 812*YScalingFactor);
+	}
+
+	// Setup the window name, icon, cursor, and background
     window.setWindowTitle("Blackjack");
     window.setWindowIcon(QIcon("Icon.png"));
     window.setStyleSheet("MainWindow {border-image: url(Background4.png)}");

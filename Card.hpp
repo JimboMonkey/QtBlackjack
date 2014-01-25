@@ -7,7 +7,7 @@ class Card
 	public:
 		const char *GetSuit() const;
 		const char *GetName() const;
-		const int GetValue() const;
+		int GetValue() const;
 
 		void SetSuit(const char *NewSuit);
 		void SetName(const char *NewName);

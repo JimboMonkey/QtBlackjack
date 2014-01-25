@@ -4,7 +4,7 @@
 /* List all players still in the game and their stack value */
 void Table::ListPlayers() const
 {
-	int i;
+	unsigned int i;
 
 	cout << endl << "There are " << Boxes.size() << " players sat at the table: " << endl << endl;
 
@@ -44,7 +44,7 @@ void Table::Clear()
 }
 
 /* Count the number of boxes in use at the table (including split boxes) */
-const int Table::CountBoxes() const
+int Table::CountBoxes() const
 {
 	return Boxes.size();
 }
@@ -58,7 +58,7 @@ Box* Table::GetBox(const int BoxIndex)
 /* Remove all the temporary boxes used for split play */
 void Table::RemoveSplits()
 {
-	int BoxIndex = 0;	
+	unsigned int BoxIndex = 0;	
 
 	/* Cycle through all the boxes */
 	while(BoxIndex != Boxes.size())	

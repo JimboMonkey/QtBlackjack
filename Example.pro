@@ -7,6 +7,7 @@
 TARGET = Example
 TEMPLATE = app
 
+DEFINES += QT_NO_DEBUG_OUTPUT
 
 SOURCES += main.cpp\
         mainwindow.cpp\
@@ -18,7 +19,7 @@ SOURCES += main.cpp\
 		Box.cpp \
 		GameThread.cpp\
 		dragwidget.cpp\
-		mylabel.cpp\
+		Chip.cpp\
 		ClickableLabel.cpp
 
 HEADERS  += mainwindow.h\
@@ -30,7 +31,7 @@ HEADERS  += mainwindow.h\
 			Box.hpp\
 			GameThread.hpp\
 			dragwidget.h\
-			mylabel.h\
+			Chip.h\
 			ClickableLabel.hpp
 
 #FORMS    += mainwindow.ui

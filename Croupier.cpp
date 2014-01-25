@@ -104,8 +104,8 @@ void Croupier::Shuffle()
 	/* Place the cut card randomly in the last quater of the shoe */
 	/* Find the first card of the last quarter of the shoe */
 	int Minimum = (ShoeSize - (ShoeSize / 4));
-	/* Pick a random card from the last quarter of the pack /*
-	/* Swap it with the cut card (which always starts as the/*
+	/* Pick a random card from the last quarter of the pack */
+	/* Swap it with the cut card (which always starts as the */
 	/* the last card in the shoe) */
 	RandomNumber = rand() % (ShoeSize - Minimum) +  Minimum;
 	TempStore = Shoe[RandomNumber];
@@ -155,7 +155,7 @@ void Croupier::ReturnCards()
 /* List all cards of the current hand */
 void Croupier::ListHand()
 {
-	int i;
+	unsigned int i;
 	
 	for(i = 0; i < Hand.size(); i++)
 	{
