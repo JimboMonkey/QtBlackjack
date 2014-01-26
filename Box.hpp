@@ -3,7 +3,7 @@
 #define BOX_HPP
 
 #include <vector>
-#include <QtGui>
+#include <QDebug>
 
 #include "Player.hpp"
 #include "Card.hpp"
