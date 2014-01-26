@@ -7,7 +7,10 @@ int main(int argc, char *argv[])
 {
 	// Create the application and window and name it
 	QApplication app(argc, argv);
-    MainWindow window;
+	// The app name needs to be set for the phonon to
+	// "export audio output names through the DBUS interface"
+	app.setApplicationName("Blackjack");
+	MainWindow window;
 	
 	// Find out the user's screen resolution
 	QRect Screen = QApplication::desktop()->screenGeometry();
