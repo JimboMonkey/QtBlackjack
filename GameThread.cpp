@@ -776,7 +776,6 @@ void GameThread::SettleBets(Table& BlackJackTable, Croupier& Dealer)
 	bool PlayerWonBet;
 
 	ClearScreen();
-	emit updateStatus("Results");	
 
 	/* Give summary for every box at the table */
 	for(BoxIndex = 0; BoxIndex < BlackJackTable.CountBoxes(); BoxIndex++)
@@ -791,8 +790,8 @@ void GameThread::SettleBets(Table& BlackJackTable, Croupier& Dealer)
 		StrHandNum = NumberToString(BoxIndex + 1);
 		StrNumHands = NumberToString(BlackJackTable.CountBoxes());
 		/* Note the equal sign here instead of += clears all text stored up to this point */
-		ResultsSummary = "Hand " + StrHandNum + " of " + StrNumHands + "\n\n"; 
-
+	//	ResultsSummary = "Hand " + StrHandNum + " of " + StrNumHands + "\n\n"; 
+		emit updateStatus("Result for Hand " + QString::fromStdString(StrHandNum) + " of " + QString::fromStdString(StrNumHands));
 		/* Include a player's split hand results under their same name heading as their other results */
 		if(CurrentBox->CheckSplit() == false)
 		{
@@ -806,12 +805,12 @@ void GameThread::SettleBets(Table& BlackJackTable, Croupier& Dealer)
 			if(CurrentBox->CheckSplit() == false)
 			{
 				cout << "  Hand of ";
-				ResultsSummary += "Hand of ";
+				ResultsSummary = "Hand of ";
 			}
 			else
 			{
 				cout << "  Split hand of ";
-				ResultsSummary += "Split hand of ";
+				ResultsSummary = "Split hand of ";
 			}
 			/* Player didn't go bust */
 			if (CurrentBox->CheckHand() < 22)
@@ -948,7 +947,8 @@ void GameThread::SettleBets(Table& BlackJackTable, Croupier& Dealer)
 //		emit clearPlayersHand();
 
 		// Test string
-//		ResultsSummary = "Hand of blackjack in push with dealer's blackjack\nWin insurance bet and collect 1500 from the dealer\nWin bet and collect 1500 from the dealer\n";
+		//ResultsSummary = "Hand of blackjack in push with dealer's blackjack\nWin insurance bet and collect 1500 from the dealer\nWin bet and collect 1500 from the dealer\n";
+		//ResultsSummary += "Win insurance bet and collect 1500 from the dealer";
 /*		StrHandNum = NumberToString(BoxIndex + 1);
 		StrNumHands = NumberToString(BlackJackTable.CountBoxes());
 		if(BlackJackTable.CountBoxes() > 1)
