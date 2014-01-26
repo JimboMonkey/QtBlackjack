@@ -3,6 +3,7 @@
 #define CLICKABLELABEL_HPP
 
 #include <QLabel>
+#include <QDebug>
 
 class ClickableLabel: public QLabel
 {
@@ -12,7 +13,7 @@ class ClickableLabel: public QLabel
 		ClickableLabel(QWidget *parent = 0); 
 
 	protected:
-		void mousePressEvent();
+		void mousePressEvent(QMouseEvent* event);
 
 	signals:
 		void clicked();
