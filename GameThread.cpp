@@ -304,7 +304,7 @@ bool GameThread::CheckForBlackJack(Table& BlackJackTable, Croupier& Dealer)
 			if (DealerBlackjack == false)
 			{
 				cout << "Dealer doesn't have blackjack.  Insurance bets lost" << endl;
-				emit updateStatus("Dealer doesn't have blackjack\nInsurance bets lost");
+				emit updateStatus("Dealer doesn't have blackjack\nInsurance bet lost");
 			}
 			/* Dealer has blackjack */
 			else
