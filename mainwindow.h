@@ -89,6 +89,18 @@ class MainWindow: public QMainWindow
 		QLabel* labelResultsBubble;
 		QLabel* labelStatusBubble;
 
+		QSignalMapper *AboutBoxMapper;
+		QWidget *AboutBox;
+	    QVBoxLayout *AboutLayout;
+	    QHBoxLayout *TextLayout;
+	    QHBoxLayout *ButtonLayout;
+		QLabel *labelAboutPicture;
+		QLabel *labelAbout;
+		QString AboutBoxText;
+		QPushButton *OKButton;
+		QPushButton *LicenceButton;
+		QPushButton *CreditsButton;
+
 		QAction *NewGame;
 		QAction *ToggleSound;
 		QAction *About;
@@ -133,6 +145,7 @@ class MainWindow: public QMainWindow
 		void PlayChipSound();
 		void DisplayAboutBox();
 		void MakeConnections();
+		void ChangeAboutBoxText(int TextSet);
 
 	signals:
 		void threadStop();	

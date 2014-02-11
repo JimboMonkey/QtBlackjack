@@ -289,6 +289,60 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 	DoubleButton->setScaledContents(true);
 	DoubleButton->setPixmap(DoubleButtonPixMap);
 
+//###################### About Box ##########################
+
+	AboutBox = new QWidget;
+	AboutBox->setGeometry(50, 300, 525, 155);
+	AboutBox->setWindowTitle("About Blackjack");
+
+	QPixmap AboutBoxPixMap("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/JimboFace.gif");
+	AboutBoxPixMap = AboutBoxPixMap.scaled(100, 100);
+
+    QVBoxLayout *AboutLayout = new QVBoxLayout(AboutBox);
+    QHBoxLayout *TextLayout = new QHBoxLayout();
+    QHBoxLayout *ButtonLayout = new QHBoxLayout();
+
+	labelAboutPicture = new QLabel(AboutBox);
+	labelAboutPicture->setPixmap(AboutBoxPixMap);
+	labelAboutPicture->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+	labelAbout = new QLabel(AboutBox);
+	labelAbout->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	labelAbout->setWordWrap(true);
+	labelAbout->setScaledContents(true);
+
+	OKButton = new QPushButton("&OK", AboutBox);
+	LicenceButton = new QPushButton("&License", AboutBox);
+	CreditsButton = new QPushButton("&Credits", AboutBox);
+
+	AboutBoxMapper = new QSignalMapper();
+	connect(OKButton, SIGNAL(clicked()), AboutBox, SLOT(hide()));
+	connect(LicenceButton, SIGNAL(clicked()), AboutBoxMapper, SLOT(map()));
+	connect(CreditsButton, SIGNAL(clicked()), AboutBoxMapper, SLOT(map()));
+	AboutBoxMapper->setMapping(LicenceButton, 2);
+	AboutBoxMapper->setMapping(CreditsButton, 3);
+	connect(AboutBoxMapper, SIGNAL(mapped(int)), this, SLOT(ChangeAboutBoxText(int)));
+
+	OKButton->setDefault(true);
+
+	TextLayout->addWidget(labelAboutPicture);
+	TextLayout->addWidget(labelAbout);
+
+	ButtonLayout->addWidget(LicenceButton);
+	ButtonLayout->addWidget(CreditsButton);
+	ButtonLayout->addWidget(OKButton);
+
+	AboutLayout->addLayout(TextLayout);
+	AboutLayout->addLayout(ButtonLayout);
+
+	ChangeAboutBoxText(1);
+
+	AboutBox->setLayout(AboutLayout);
+	//AboutBox->setFixedSize(AboutBox->size());
+	AboutBox->setWindowFlags(Qt::Dialog);
+
+//###########################################################
+
 
 //##### func
 
@@ -391,6 +445,7 @@ void MainWindow::DisableChips(bool ActiveState)
 	newSWd3->setInactive(ActiveState);
 	newSWd4->setInactive(ActiveState);
 	newSWd5->setInactive(ActiveState);
+	myDragWidget->setInactive(ActiveState);
 }
 
 void MainWindow::HideHandValueSpots()
@@ -399,6 +454,35 @@ void MainWindow::HideHandValueSpots()
 	labelDealersHandValueSpot->setVisible(false);
 	labelPlayersHandValue->setVisible(false);
 	labelDealersHandValue->setVisible(false);
+}
+
+void MainWindow::ChangeAboutBoxText(int TextSet)
+{
+	LicenceButton->show();
+	CreditsButton->show();
+
+	disconnect(OKButton, SIGNAL(clicked()), AboutBox, SLOT(hide()));
+	connect(OKButton, SIGNAL(clicked()), AboutBoxMapper, SLOT(map()));
+	AboutBoxMapper->setMapping(OKButton, 1);
+
+	switch (TextSet)
+	{
+		case 1:
+			AboutBoxText = "<b><i><font size = 4>Blackjack</i></b><br>Another JimboMonkey Production<br>Version 1.0<br><br>Copyright \x00A9 2014 JimboMonkey Productions";
+			disconnect(OKButton, SIGNAL(clicked()), AboutBoxMapper, SLOT(map()));
+			connect(OKButton, SIGNAL(clicked()), AboutBox, SLOT(hide()));
+			break;
+		case 2:
+			AboutBoxText = "<b><i><font size = 4>License</i></b><br>Copyright 2014 James O'Hea<br><br>Blackjack is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br><br>Blackjack is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br><br> You should have received a copy of the GNU General Public License along with Blackjack.  If not, see <http://www.gnu.org/licenses/>.<br><br>";
+			LicenceButton->hide();
+			AboutBox->adjustSize();
+			break;
+		case 3:
+			AboutBoxText = "<b><i><font size = 4>Credits</i></b><br>Credits blurbbb<br>vlaaahh<br><br>";
+			CreditsButton->hide();
+			break;
+	}
+	labelAbout->setText(AboutBoxText);		
 }
 
 void MainWindow::PositionYesNo()
@@ -416,34 +500,22 @@ void MainWindow::PositionYesNo()
 void MainWindow::DisplayAboutBox()
 {
 	QMessageBox msgBox;
-	QPixmap AboutBoxPixMap("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/JimboFace.gif");
-	AboutBoxPixMap = AboutBoxPixMap.scaled(100, 100);
-	msgBox.setWindowTitle("About Blackjack");
-	QString labelText = "<b><i><font size = 4>Blackjack</i></b><br>Another JimboMonkey Production<br>Version 1.0<br><br>Copyright \x00A9 2013 JimboMonkey Productions";
+
+
+	QString labelText = "<b><i><font size = 4>Blackjack</i></b><br>Another JimboMonkey Production<br>Version 1.0<br><br>Copyright \x00A9 2014 JimboMonkey Productions";
 	QString licenseText = "<b><i><font size = 4>License</i></b><br>License blurbbb<br>vlaaahh";
-	//labelText.append("Blackjack");
-//	labelText.append("</i></b>");
+
+	msgBox.setWindowTitle("About Blackjack");
+	//msgBox.setIconPixmap(AboutBoxPixMap);
 	msgBox.setText(labelText);
-	//msgBox.setText("Blackjack\nAnother JimboMonkey Production\nVersion 1.0");
+
 	QSpacerItem* horizontalSpacer = new QSpacerItem(500, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
 	QGridLayout* layout = (QGridLayout*)msgBox.layout();
 	layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
-//	msgBox.setInformativeText("Another JimboMonkey Production");
-	msgBox.setIconPixmap(AboutBoxPixMap);
-	QPushButton *LicenceButton = msgBox.addButton("&Licence", QMessageBox::ActionRole);
-//	QPushButton *CreditsButton = msgBox.addButton("&Credits", QMessageBox::AcceptRole);
-//	QPushButton *OkButton = msgBox.addButton("OK", QMessageBox::AcceptRole);
-	LicenceButton->setGeometry(50, 300, 100, 100);
-	connect(LicenceButton, SIGNAL(clicked()), this, SLOT(PlayWinSound()));
-	msgBox.exec();
-	/*if(msgBox.exec() == QMessageBox::Yes)
-	{
-		// do something
-	}
-	else
-	{
-		// do something else
-	}*/
+
+	AboutBox->show();
+
+	//msgBox.exec();
 }
 
 void MainWindow::HideButtons(bool HitVisible, bool StandVisible, bool SurrenderVisible, bool DoubleVisible, bool SplitVisible, bool YesVisible, bool NoVisible, bool DoneVisible)
