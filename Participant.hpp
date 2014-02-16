@@ -30,7 +30,8 @@ class Participant: public QObject
 		int AcesHeld;
 
 	signals:
-		void updatePlayersHand(QString, int);	
+		void updatePlayersHand(QString, int);
+		void ClearPlayersHand();
 };
 
 #endif

@@ -1,7 +1,7 @@
 
 #include "Participant.hpp"
 
-//#include <sstream>
+#include <sstream>
 
 #define DefaultStackValue 100
 
@@ -10,9 +10,11 @@ void Participant::ListHand()
 {
 	unsigned int i;
 	
+	emit ClearPlayersHand();
+
 	for(i = 0; i < Hand.size(); i++)
 	{
-		cout << "  " << Hand.at(i).GetName() << "(" << Hand.at(i).GetValue() << ")" << " of " << Hand.at(i).GetSuit() << endl;
+		//cout << "  " << Hand.at(i).GetName() << "(" << Hand.at(i).GetValue() << ")" << " of " << Hand.at(i).GetSuit() << endl;
 		QString CardName = Hand.at(i).GetName();
 		QString CardSuit = Hand.at(i).GetSuit();
 		QString LoadCardName = "PlayerCards/" + CardName + CardSuit + ".png";
@@ -29,22 +31,22 @@ QString Participant::StatusResult() const
 	/* Current box is bust */
 	if (HandValue > 21 and AcesHeld == 0)
 	{
-		cout << "  Bust with ";
+		//cout << "  Bust with ";
 		//strHandValue = " Bust with ";
 	}
 	/* Current box is holding aces so has a soft hand */
 	else if (AcesHeld > 0 and HandValue != 21)
 	{
-		cout << "  Soft ";
+		//cout << "  Soft ";
 		strHandValue = "S";
 	}
 	/* State the value of the current hand */
 	else
 	{
-		cout << "  ";
+		//cout << "  ";
 		strHandValue = "";
 	}
-	cout << HandValue << endl << endl;
+	//cout << HandValue << endl << endl;
 	strHandValue += QString::number(HandValue);
 	return strHandValue;
 }
