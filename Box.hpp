@@ -33,6 +33,10 @@ class Box: public Participant
 		void ReturnCards();
 		void ReturnToStack(int ReturnedChipValue);
 
+	public slots:
+		void IncreaseBet(const float BetIncrease);
+		void DecreaseBet(const float BetDecrease);
+
 	private:
 		Player *Owner;
 		float Bet;
@@ -46,9 +50,7 @@ class Box: public Participant
 		void updateBet(QString);
 		void updatePlayersName(QString);
 
-	private slots:
-		void IncreaseBet(const float BetIncrease);
-		void DecreaseBet(const float BetDecrease);
+
 		
 };
 

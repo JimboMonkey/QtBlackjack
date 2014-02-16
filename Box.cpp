@@ -44,15 +44,7 @@ float Box::CountBet() const
 	return Bet;
 }
 
-/* Place a bet on the current box */
-void Box::PlaceBet(const float NewBet)
-{
-	Owner->PlaceBet(NewBet);
-	Bet += NewBet;
-	qDebug() << "Bet is now " << Bet;
-	emit updateBet(QString::number(Bet));
-}
-
+/* Place or increase a bet on the current box */
 void Box::IncreaseBet(const float BetIncrease)
 {
 	// Remove from stack
@@ -63,6 +55,7 @@ void Box::IncreaseBet(const float BetIncrease)
 	emit updateBet(QString::number(Bet));
 }
 
+// Decrease a bet on the current box
 void Box::DecreaseBet(const float BetDecrease)
 {
 	// Return to stack
