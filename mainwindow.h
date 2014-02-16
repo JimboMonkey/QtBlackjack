@@ -65,12 +65,12 @@ class MainWindow: public QMainWindow
 		ClickableLabel *YesButton; 
 		ClickableLabel *NoButton; 
 		ClickableLabel *DoneButton; 
-		DragWidget *newSWd;
-		DragWidget *newSWd2;
-		DragWidget *newSWd3;
-		DragWidget *newSWd4;
-		DragWidget *newSWd5;
-		DragWidget *myDragWidget;
+		DragWidget *FivePile;
+		DragWidget *TenPile;
+		DragWidget *TwentyFivePile;
+		DragWidget *FiftyPile;
+		DragWidget *HundredPile;
+		DragWidget *BettingPile;
 
 		QLabel* labelBetValue;
 		QLabel* labelStackValue;
@@ -121,23 +121,22 @@ class MainWindow: public QMainWindow
 		QGroupBox* PlayersCards;
 		QGroupBox* DealersCards;
 
+	    QSignalMapper *m_sigmapper;
+
 	private slots:
-		void updateDealersHand(QString LoadCardName, int CardPosition);
-		void updatePlayersHand(QString LoadCardName, int CardPosition);
+		void UpdateDealersHand(QString LoadCardName, int CardPosition);
+		void UpdatePlayersHand(QString LoadCardName, int CardPosition);
 		void UpdatePlayersHandValue(QString HandValue);
 		void UpdateDealersHandValue(QString HandValue);
-		void updateStackValue(QString StackValue);
+		void UpdateStackValue(QString StackValue);
 		void UpdateBetValue(QString BetValue);
-	//	void updatePlayersName(QString PlayersName);
 		void ClearPlayersHand();
 		void ClearDealersHand();
-		void updateGameStatus(QString Status);
+		void UpdateGameStatus(QString Status);
 		void HideButtons(bool HitVisible, bool StandVisible, bool SurrenderVisible, bool DoubleVisible, bool SplitVisible, bool YesVisible, bool NoVisible, bool DoneVisible);
 		void ResultText(bool BustVisible, bool DealerBustVisible, bool BlackjackVisible, bool DealerBlackjackVisible);
 		void HideHandValueSpots();
-		void updateResultsSummary(QString ResultsSummary);
-		void HideResultsSummary();
-		void Restart();
+		void UpdateResultsSummary(QString ResultsSummary);
 		void DisableChips(bool ActiveState);
 		void PositionYesNo();
 		void PlayWinSound();
