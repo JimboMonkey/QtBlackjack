@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 	PlayersCards = new QGroupBox(this);
 	DealersCards = new QGroupBox(this);
 
+	// Set the size and geometry of each card hand container
 	PlayersCards->setGeometry(195*XScalingFactor, 310*YScalingFactor, 300*XScalingFactor, 300*YScalingFactor);
 	DealersCards->setGeometry(230*XScalingFactor, 50*YScalingFactor, 300*XScalingFactor, 300*YScalingFactor);
 
@@ -43,20 +44,20 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 	int posX = 0;
 	int posXDealer = 0;
 
-//	GameThread *myThread = new GameThread();
-
-	for(int a = 0; a < 11; a++)
+	// Create a card label for every possible card in each hand
+	// No hand can hold more than 11 cards
+	for(int CardNumber = 0; CardNumber < 11; CardNumber++)
 	{
 		posX += 24;
 		posXDealer += 19;
 
-		DealersHand[a] = new QLabel(DealersCards);
-		DealersHand[a]->setGeometry(posXDealer*XScalingFactor, 0, 191*XScalingFactor, 250*YScalingFactor);
-		DealersHand[a]->lower();
+		DealersHand[CardNumber] = new QLabel(DealersCards);
+		DealersHand[CardNumber]->setGeometry(posXDealer*XScalingFactor, 0, 191*XScalingFactor, 250*YScalingFactor);
+		DealersHand[CardNumber]->lower();
 
-		PlayersHand[a] = new QLabel(PlayersCards);
-		PlayersHand[a]->setGeometry(posX*XScalingFactor, 0, 191*XScalingFactor, 250*YScalingFactor);
-		PlayersHand[a]->lower();
+		PlayersHand[CardNumber] = new QLabel(PlayersCards);
+		PlayersHand[CardNumber]->setGeometry(posX*XScalingFactor, 0, 191*XScalingFactor, 250*YScalingFactor);
+		PlayersHand[CardNumber]->lower();
 	}
 
 	// Create a set of menu actions
@@ -69,7 +70,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 	ToggleSound->setCheckable(true);
 	ToggleSound->setChecked(true);
 
-	// Create a menu and populate it with actions
+	// Create a menu and populate it with the actions
 	QMenu *Menu;
 	Menu = menuBar()->addMenu("&Menu");
 	Menu->addAction(NewGame);
@@ -81,22 +82,27 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 	connect(About, SIGNAL(triggered()), this, SLOT(DisplayAboutBox()));
 	connect(Quit, SIGNAL(triggered()), qApp, SLOT(quit()));
 
+	// Set the two font colours to be used throughout the game
+	// Black for all text...
 	QPalette* TextPalette = new QPalette();
-	TextPalette->setColor(QPalette::WindowText,Qt::black);
+	TextPalette->setColor(QPalette::WindowText, Qt::black);
 
-	QRgb rgbvalue;
-	rgbvalue = qRgb(205, 205, 0);
-
+	// ...except the bet value text which is a kind of gold
+	QRgb BetTextRGBValue;
+	BetTextRGBValue = qRgb(205, 205, 0);
 	QPalette* BetValueTextPalette = new QPalette();
-	BetValueTextPalette->setColor(QPalette::WindowText,rgbvalue);
+	BetValueTextPalette->setColor(QPalette::WindowText, BetTextRGBValue);
 
+	// Setup the different fonts to be used throughout the game...
 	QFont LabelFont("mry_KacstQurn");
-	LabelFont.setPointSizeF(24.0*XScalingFactor);
 	QFont StatusFont("mry_KacstQurn");
-	StatusFont.setPointSizeF(22.0*XScalingFactor);
 	QFont ResultsFont("mry_KacstQurn");
-	ResultsFont.setPointSizeF(16.0*XScalingFactor);
 	QFont HandValueFont("mry_KacstQurn");
+
+	// ...and their associated sizes
+	LabelFont.setPointSizeF(24.0*XScalingFactor);
+	StatusFont.setPointSizeF(22.0*XScalingFactor);
+	ResultsFont.setPointSizeF(16.0*XScalingFactor);
 	HandValueFont.setPointSizeF(16.0*XScalingFactor);
 
 /*	QFont LabelFont("mry_KacstQurn", 18);
@@ -210,35 +216,35 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 	labelDealersBlackjackText->setScaledContents(true);
 	labelDealersBlackjackText->setVisible(false);
 
-    newSWd = new DragWidget(this, false);
-	newSWd->populate(5);
-	newSWd->setGeometry(15*XScalingFactor, 690*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
-	newSWd->raise();
+    FivePile = new DragWidget(this, false);
+	FivePile->populate(5);
+	FivePile->setGeometry(15*XScalingFactor, 690*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
+	FivePile->raise();
 
-	newSWd2 = new DragWidget(this, false);
-	newSWd2->populate(10);
-	newSWd2->setGeometry(135*XScalingFactor, 705*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
-	newSWd2->raise();
+	TenPile = new DragWidget(this, false);
+	TenPile->populate(10);
+	TenPile->setGeometry(135*XScalingFactor, 705*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
+	TenPile->raise();
 
-	newSWd3 = new DragWidget(this, false);	
-	newSWd3->populate(25);
-	newSWd3->setGeometry(265*XScalingFactor, 715*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
-	newSWd3->raise();
+	TwentyFivePile = new DragWidget(this, false);	
+	TwentyFivePile->populate(25);
+	TwentyFivePile->setGeometry(265*XScalingFactor, 715*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
+	TwentyFivePile->raise();
 
-	newSWd4 = new DragWidget(this, false);	
-	newSWd4->populate(50);
-	newSWd4->setGeometry(385*XScalingFactor, 705*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
-	newSWd4->raise();
+	FiftyPile = new DragWidget(this, false);	
+	FiftyPile->populate(50);
+	FiftyPile->setGeometry(385*XScalingFactor, 705*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
+	FiftyPile->raise();
 
-	newSWd5 = new DragWidget(this, false);	
-	newSWd5->populate(100);
-	newSWd5->setGeometry(500*XScalingFactor, 690*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
-	newSWd5->raise();
+	HundredPile = new DragWidget(this, false);	
+	HundredPile->populate(100);
+	HundredPile->setGeometry(500*XScalingFactor, 690*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
+	HundredPile->raise();
 
-	myDragWidget = new DragWidget(this, true);
-	myDragWidget->populate(200);
-//	myDragWidget->setGeometry(267, 414, 88, 200);
-	myDragWidget->setGeometry(210*XScalingFactor, 414*YScalingFactor, 200*XScalingFactor, 220*YScalingFactor);
+	BettingPile = new DragWidget(this, true);
+	BettingPile->populate(200);
+//	BettingPile->setGeometry(267, 414, 88, 200);
+	BettingPile->setGeometry(210*XScalingFactor, 414*YScalingFactor, 200*XScalingFactor, 220*YScalingFactor);
 
 	DoneButton = new ClickableLabel(this);
 	DoneButton->setGeometry(300*XScalingFactor, 580*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
@@ -343,44 +349,44 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
 //###########################################################
 
-
 //##### func
 
-//	updateStackValue("100");
-	myDragWidget->raise();
-//	MakeConnections();
+	BettingPile->raise();
+
 	myThread = new GameThread();
-	connect(myThread, SIGNAL(updatePlayersHand(QString,int)), this, SLOT(updatePlayersHand(QString,int)));
-	connect(myThread, SIGNAL(updateDealersHand(QString,int)), this, SLOT(updateDealersHand(QString,int)));
+
+	connect(myThread, SIGNAL(updatePlayersHand(QString,int)), this, SLOT(UpdatePlayersHand(QString,int)));
+	connect(myThread, SIGNAL(updateDealersHand(QString,int)), this, SLOT(UpdateDealersHand(QString,int)));
 	connect(myThread, SIGNAL(updateDealersHandValue(QString)), this, SLOT(UpdateDealersHandValue(QString)));
 	connect(myThread, SIGNAL(updatePlayersHandValue(QString)), this, SLOT(UpdatePlayersHandValue(QString)));
-	connect(myThread, SIGNAL(updateStack(QString)), this, SLOT(updateStackValue(QString)));
+	connect(myThread, SIGNAL(updateStack(QString)), this, SLOT(UpdateStackValue(QString)));
 	connect(myThread, SIGNAL(updateBet(QString)), this, SLOT(UpdateBetValue(QString)));
-	connect(myDragWidget, SIGNAL(AddToBet(float)), myThread, SIGNAL(IncreaseBet(float)));
-	connect(myDragWidget, SIGNAL(RemoveFromBet(float)), myThread, SIGNAL(DecreaseBet(float)));
 	connect(myThread, SIGNAL(clearPlayersHand()), this, SLOT(ClearPlayersHand()));
 	connect(myThread, SIGNAL(clearDealersHand()), this, SLOT(ClearDealersHand()));
-	connect(myThread, SIGNAL(updateStatus(QString)), this, SLOT(updateGameStatus(QString)));
-	connect(myThread, SIGNAL(updateResultsSummary(QString)), this, SLOT(updateResultsSummary(QString)));
-	connect(myThread, SIGNAL(HideResultsSummary()), this, SLOT(HideResultsSummary()));
-	connect(myThread, SIGNAL(Clearchips()), myDragWidget, SLOT(ClearChips()));
+	connect(myThread, SIGNAL(Clearchips()), this, SLOT(HideHandValueSpots()));
 	connect(myThread, SIGNAL(ButtonVisibility(bool, bool, bool, bool, bool, bool, bool, bool)), this, SLOT(HideButtons(bool, bool, bool, bool, bool, bool, bool, bool)));
 	connect(myThread, SIGNAL(ResultTextVisibility(bool, bool, bool, bool)), this, SLOT(ResultText(bool, bool, bool, bool)));
-	connect(myThread, SIGNAL(HandValueSpotsVisibility()), this, SLOT(HideHandValueSpots()));
-//	connect(myThread, SIGNAL(TriggerRestart()), this, SLOT(Restart()));
+	connect(myThread, SIGNAL(updateStatus(QString)), this, SLOT(UpdateGameStatus(QString)));
+	connect(myThread, SIGNAL(updateResultsSummary(QString)), this, SLOT(UpdateResultsSummary(QString)));
 	connect(myThread, SIGNAL(DisableChips(bool)), this, SLOT(DisableChips(bool)));
 	connect(myThread, SIGNAL(GameOver()), this, SLOT(PositionYesNo()));
 	connect(myThread, SIGNAL(PlayWinSound()), this, SLOT(PlayWinSound()));
 	connect(myThread, SIGNAL(PlayLoseSound()), this, SLOT(PlayLoseSound()));
-	connect(myDragWidget, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
-	connect(newSWd, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
-	connect(newSWd2, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
-	connect(newSWd3, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
-	connect(newSWd4, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
-	connect(newSWd5, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
+
+	connect(BettingPile, SIGNAL(AddToBet(float)), myThread, SIGNAL(IncreaseBet(float)));
+	connect(BettingPile, SIGNAL(RemoveFromBet(float)), myThread, SIGNAL(DecreaseBet(float)));
+	connect(BettingPile, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
+
+	connect(FivePile, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
+	connect(TenPile, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
+	connect(TwentyFivePile, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
+	connect(FiftyPile, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
+	connect(HundredPile, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
+
+	connect(myThread, SIGNAL(Clearchips()), BettingPile, SLOT(ClearChips()));
 
 	// #1
-    QSignalMapper *m_sigmapper;
+
 	m_sigmapper = new QSignalMapper();
 
 	// #2
@@ -393,7 +399,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 	connect(YesButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
 	connect(NoButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
 
-	connect(DoneButton, SIGNAL(clicked()), myThread, SLOT(BettingDone()));
+	connect(DoneButton, SIGNAL(clicked()), myThread, SIGNAL(BetDone()));
 /////////////////////////
 	connect(NewGame, SIGNAL(triggered()), m_sigmapper, SLOT(map()));
 ////////////////////////
@@ -410,19 +416,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
 	// #4
 	connect(m_sigmapper, SIGNAL(mapped(int)), myThread, SLOT(ChoiceMade(int)));
-	//connect(myThread, SIGNAL(finished()), myThread, SLOT(deleteLater()));
-	//connect(this, SIGNAL(threadStop()), myThread, SLOT(deleteLater()));
-//	connect(myThread, SIGNAL(finished()), this, SLOT(MakeConnections()));
 	connect(myThread, SIGNAL(finished()), this, SLOT(PositionYesNo()));
 	
-	/*HideResultsSummary();
-	updateStackValue("100");
-	myThread->start();*/
 	MakeConnections();
-
-//	CollectBets();
-//	InitialDeal();
-//	InsuranceOffers();
 }
 
 MainWindow::~MainWindow()
@@ -433,19 +429,23 @@ MainWindow::~MainWindow()
 
 void MainWindow::MakeConnections()
 {
-	HideResultsSummary();
-	updateStackValue("100");
+	UpdateResultsSummary("");
+	UpdateStackValue("100");
+	disconnect(YesButton, SIGNAL(clicked()), this, SLOT(MakeConnections()));
+	disconnect(NoButton, SIGNAL(clicked()), qApp, SLOT(quit()));
+	connect(YesButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
+	connect(NoButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
 	myThread->start();
 }
 
 void MainWindow::DisableChips(bool ActiveState)
 {
-	newSWd->setInactive(ActiveState);
-	newSWd2->setInactive(ActiveState);
-	newSWd3->setInactive(ActiveState);
-	newSWd4->setInactive(ActiveState);
-	newSWd5->setInactive(ActiveState);
-	myDragWidget->setInactive(ActiveState);
+	FivePile->setInactive(ActiveState);
+	TenPile->setInactive(ActiveState);
+	TwentyFivePile->setInactive(ActiveState);
+	FiftyPile->setInactive(ActiveState);
+	HundredPile->setInactive(ActiveState);
+	BettingPile->setInactive(ActiveState);
 }
 
 void MainWindow::HideHandValueSpots()
@@ -487,14 +487,23 @@ void MainWindow::ChangeAboutBoxText(int TextSet)
 
 void MainWindow::PositionYesNo()
 {
-	YesButton->setGeometry(200*XScalingFactor, 360*YScalingFactor, 130*XScalingFactor, 37*YScalingFactor);
-	NoButton->setGeometry(320*XScalingFactor, 360*YScalingFactor, 130*XScalingFactor, 37*YScalingFactor);
-	YesButton->setVisible(true);
-	NoButton->setVisible(true);
-	YesButton->raise();
-	NoButton->raise();
-	connect(YesButton, SIGNAL(clicked()), this, SLOT(MakeConnections()));
-	connect(NoButton, SIGNAL(clicked()), qApp, SLOT(quit()));
+	if(labelGameStatus->text() == "Game Over")
+	{
+		disconnect(YesButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
+		disconnect(NoButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
+		connect(YesButton, SIGNAL(clicked()), this, SLOT(MakeConnections()));
+		connect(NoButton, SIGNAL(clicked()), qApp, SLOT(quit()));
+		YesButton->setGeometry(200*XScalingFactor, 360*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
+		NoButton->setGeometry(320*XScalingFactor, 360*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
+		YesButton->setVisible(true);
+		NoButton->setVisible(true);
+		YesButton->raise();
+		NoButton->raise();
+	}
+	else
+	{
+		MakeConnections();
+	}
 }
 
 void MainWindow::DisplayAboutBox()
@@ -538,9 +547,10 @@ void MainWindow::HideButtons(bool HitVisible, bool StandVisible, bool SurrenderV
 	DoneButton->raise();
 
 
-//	myDragWidget->raise();
+//	BettingPile->raise();
 }
 
+// Display the appropriate 
 void MainWindow::ResultText(bool BustVisible, bool DealerBustVisible, bool BlackjackVisible, bool DealerBlackjackVisible)
 {
 	labelBustText->setVisible(BustVisible);
@@ -572,12 +582,16 @@ void MainWindow::ResultText(bool BustVisible, bool DealerBustVisible, bool Black
 	}
 }
 
-void MainWindow::updatePlayersHand(QString LoadCardName, int CardPosition)
+// Add a card to the player's hand.  Adjust the hand position to keep it central
+void MainWindow::UpdatePlayersHand(QString LoadCardName, int CardPosition)
 {
-	QImage myImage;
+	QImage CardImage;
+	int NewHandPosition;
 
-	myImage.load(LoadCardName);
+	CardImage.load(LoadCardName);
 
+	// Only play the draw card sound if the card is drawn during play
+	// ie not during the initial draw
 	if(CardPosition > 1)
 	{
 		media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/DrawCard.mp3"));
@@ -587,15 +601,22 @@ void MainWindow::updatePlayersHand(QString LoadCardName, int CardPosition)
 			media->play();
 		}
 	}
-//	PlayersHand[CardPosition]->setScaledContents(true);
-	PlayersHand[CardPosition]->setPixmap(QPixmap::fromImage(myImage).scaledToWidth(161*XScalingFactor));
+
+	// Load the image for the given card into the given position (and scale if needed)
+	// New cards are raised to ensure all cards of hand are visible
+	PlayersHand[CardPosition]->setPixmap(QPixmap::fromImage(CardImage).scaledToWidth(161*XScalingFactor));
 	PlayersHand[CardPosition]->show();
 	PlayersHand[CardPosition]->raise();
-	int NewPos = 216 - ((CardPosition + 1) * 12);
-	PlayersCards->setGeometry(NewPos*XScalingFactor, 310*YScalingFactor, 541*XScalingFactor, 331*YScalingFactor);
-
+	
+	// Adjust the overall hand position and value as cards are drawn to ensure the hand remains centered on the screen
+	NewHandPosition = 216 - ((CardPosition + 1) * 12);
+	PlayersCards->setGeometry(NewHandPosition*XScalingFactor, 310*YScalingFactor, 541*XScalingFactor, 331*YScalingFactor);
 	labelHandValueSpot->setGeometry((238 - (CardPosition + 1) * 12)*XScalingFactor, 470*YScalingFactor, 55*XScalingFactor, 55*YScalingFactor);
 	labelPlayersHandValue->setGeometry((210 - (CardPosition + 1) * 12)*XScalingFactor, 482*YScalingFactor, 111*XScalingFactor, 31*YScalingFactor);
+	labelHandValueSpot->raise();
+	labelPlayersHandValue->raise();
+
+	// Adjust all the button positions as well
 	HitButton->setGeometry((315 + (CardPosition + 1) * 10)*XScalingFactor, 350*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
 	YesButton->setGeometry((315 + (CardPosition + 1) * 10)*XScalingFactor, 350*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
 	StandButton->setGeometry((325 + (CardPosition + 1) * 10)*XScalingFactor, 382*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
@@ -603,16 +624,18 @@ void MainWindow::updatePlayersHand(QString LoadCardName, int CardPosition)
 	SurrenderButton->setGeometry((335 + (CardPosition + 1) * 10)*XScalingFactor, 414*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
 	SplitButton->setGeometry((345 + (CardPosition + 1) * 10)*XScalingFactor, 446*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
 	DoubleButton->setGeometry((355 + (CardPosition + 1) * 10)*XScalingFactor, 478*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
-	labelHandValueSpot->raise();
-	labelPlayersHandValue->raise();
 }
 
-void MainWindow::updateDealersHand(QString LoadCardName, int CardPosition)
+// Add a card to the dealer's hand.  Adjust the hand position to keep it central
+void MainWindow::UpdateDealersHand(QString LoadCardName, int CardPosition)
 {
-	QImage myImage;
+	QImage CardImage;
+	int NewHandPosition;
 
-	myImage.load(LoadCardName);	
+	CardImage.load(LoadCardName);	
 
+	// Only play the draw card sound if the card is drawn during play
+	// ie not during the initial draw
 	if(CardPosition > 0 and LoadCardName != "DealerCards/CardBack.png")
 	{
 		media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/DrawCard.mp3"));
@@ -622,12 +645,16 @@ void MainWindow::updateDealersHand(QString LoadCardName, int CardPosition)
 			media->play();
 		}
 	}
-//	DealersHand[CardPosition]->setScaledContents(true);
-	DealersHand[CardPosition]->setPixmap(QPixmap::fromImage(myImage).scaledToWidth(94*XScalingFactor));
+
+	// Load the image for the given card into the given position (and scale if needed)
+	// New cards are raised to ensure all cards of hand are visible
+	DealersHand[CardPosition]->setPixmap(QPixmap::fromImage(CardImage).scaledToWidth(94*XScalingFactor));
 	DealersHand[CardPosition]->show();
 	DealersHand[CardPosition]->raise();
-	int NewPos = 250 - ((CardPosition + 1) * 10);
-	DealersCards->setGeometry(NewPos*XScalingFactor, 50*YScalingFactor, 541*XScalingFactor, 331*YScalingFactor);
+
+	// Adjust the overall hand position and value as cards are drawn to ensure the hand remains centered on the screen
+	NewHandPosition = 250 - ((CardPosition + 1) * 10);
+	DealersCards->setGeometry(NewHandPosition*XScalingFactor, 50*YScalingFactor, 541*XScalingFactor, 331*YScalingFactor);
 	labelDealersHandValueSpot->setGeometry((265 - (CardPosition + 1) * 10)*XScalingFactor, 170*YScalingFactor, 55*XScalingFactor, 55*YScalingFactor);
 	labelDealersHandValue->setGeometry((235 - (CardPosition + 1) * 10)*XScalingFactor, 181*YScalingFactor, 111*XScalingFactor, 31*YScalingFactor);
 	labelDealersHandValueSpot->raise();
@@ -683,29 +710,35 @@ void MainWindow::PlayChipSound()
 				media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip3.mp3"));
 				break;
 		}
+		// Play the selected sound
 		media->play();
 	}	
 }
 
-void MainWindow::updateGameStatus(QString Status)
+// Update the game status
+void MainWindow::UpdateGameStatus(QString Status)
 {
 	labelGameStatus->setText(Status);
 }
 
-void MainWindow::updateResultsSummary(QString ResultsSummary)
+// Update the results summary
+void MainWindow::UpdateResultsSummary(QString ResultsSummary)
 {
-	labelResultsSummary->setVisible(true);
-	labelResultsBubble->setVisible(true);
-	labelResultsBubble->raise();
-	labelResultsSummary->raise();
-	labelResultsSummary->setText(ResultsSummary);
-	labelResultsSummary->setAlignment(Qt::AlignHCenter);
-}
-
-void MainWindow::HideResultsSummary()
-{
-	labelResultsSummary->setVisible(false);
-	labelResultsBubble->setVisible(false);
+	// If a blank string is passed in, hide the summary and graphic
+	if (ResultsSummary == "")
+	{
+		labelResultsSummary->setVisible(false);
+		labelResultsBubble->setVisible(false);
+	}
+	else
+	{
+		labelResultsSummary->setVisible(true);
+		labelResultsBubble->setVisible(true);
+		labelResultsBubble->raise();
+		labelResultsSummary->raise();
+		labelResultsSummary->setText(ResultsSummary);
+		labelResultsSummary->setAlignment(Qt::AlignHCenter);
+	}
 }
 
 // Update the GUI player's hand value
@@ -724,54 +757,57 @@ void MainWindow::UpdateDealersHandValue(QString HandValue)
 	labelDealersHandValue->setVisible(true);
 }
 
-void MainWindow::updateStackValue(QString StackValue)
+// Update stack value and refresh GUI to only present playable chips
+void MainWindow::UpdateStackValue(QString StackValue)
 {
 	labelStackValue->setText(StackValue);
-	float dec = StackValue.toFloat();
+	// Float is used instead of int because half values 
+	// are possible with side bet or blackjack payouts
+	float NewStackValue = StackValue.toFloat();
 
-	if(dec >= 5.0)
+	if(NewStackValue >= 5.0)
 	{
-		newSWd->setVisible(true);
+		FivePile->setVisible(true);
 	}
 	else
 	{
-		newSWd->setVisible(false);
+		FivePile->setVisible(false);
 	}
 
-	if(dec >= 10.0)
+	if(NewStackValue >= 10.0)
 	{
-		newSWd2->setVisible(true);
+		TenPile->setVisible(true);
 	}
 	else
 	{
-		newSWd2->setVisible(false);
+		TenPile->setVisible(false);
 	}
 
-	if(dec >= 25.0)
+	if(NewStackValue >= 25.0)
 	{
-		newSWd3->setVisible(true);
+		TwentyFivePile->setVisible(true);
 	}
 	else
 	{
-		newSWd3->setVisible(false);
+		TwentyFivePile->setVisible(false);
 	}
 
-	if(dec >= 50.0)
+	if(NewStackValue >= 50.0)
 	{
-		newSWd4->setVisible(true);
+		FiftyPile->setVisible(true);
 	}
 	else
 	{
-		newSWd4->setVisible(false);
+		FiftyPile->setVisible(false);
 	}
 
-	if(dec >= 100.0)
+	if(NewStackValue >= 100.0)
 	{
-		newSWd5->setVisible(true);
+		HundredPile->setVisible(true);
 	}	
 	else
 	{
-		newSWd5->setVisible(false);
+		HundredPile->setVisible(false);
 	}
 }
 
@@ -814,21 +850,4 @@ void MainWindow::ClearDealersHand()
 		DealersHand[CardNumber]->hide();
 	}
 }
-
-void MainWindow::Restart()
-{
-	myThread->terminate();
-	qDebug() << "called me\n";
-	while(myThread->isFinished() != true)
-	{
-
-	}
-	qDebug() << "got here\n";
-//	MakeConnections();
-/*	while (ToggleSound->isChecked())
-	{
-	}*/
-}
-
-
 
