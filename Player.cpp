@@ -47,3 +47,4 @@ void Player::UpdateStack()
 {
 	emit updateStack(QString::number(Stack));
 }
+
