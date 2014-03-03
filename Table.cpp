@@ -6,13 +6,12 @@ void Table::ListPlayers() const
 {
 	unsigned int i;
 
-	cout << endl << "There are " << Boxes.size() << " players sat at the table: " << endl << endl;
+	qDebug() << endl << "There are " << Boxes.size() << " players sat at the table: " << endl << endl;
 
 	for (i = 0; i < Boxes.size(); i++)
 	{
-		cout << "  " << Boxes.at(i)->GetOwner() << " with a stack of " << Boxes.at(i)->CountStack() << endl;
+		qDebug() << "  Player " << i+1 << " with a stack of " << Boxes.at(i)->CountStack() << endl;
 	}
-	cout << endl;
 }
 
 /* Add box to table list (covers both initial additions and split inserts) */
@@ -38,9 +37,9 @@ void Table::RemoveBox(const int BoxIndex)
 
 void Table::Clear()
 {
-	cout << "Boxes = " << Boxes.size() << endl;
+	qDebug() << "Boxes = " << Boxes.size() << endl;
 	Boxes.clear();
-	cout << "Boxes = " << Boxes.size() << endl;
+	qDebug() << "Boxes = " << Boxes.size() << endl;
 }
 
 /* Count the number of boxes in use at the table (including split boxes) */

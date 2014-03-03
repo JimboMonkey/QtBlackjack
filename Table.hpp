@@ -3,6 +3,7 @@
 #define TABLE_HPP
 
 #include <vector>
+#include <QDebug>
 
 #include "Box.hpp"
 
