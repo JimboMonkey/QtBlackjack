@@ -13,15 +13,12 @@ class Player: public QObject
 	Q_OBJECT
 
 	public:
-		Player(const string NewName);
-//		~Player();
-		const string GetName() const;
+		Player();
 		void PlaceBet(const float NewBet);
 		float CountStack() const;
 		void AddToStack(const float Winnings);
 
 	private:
-		string Name;
 		float Stack;
 		void UpdateStack();
 

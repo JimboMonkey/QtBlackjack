@@ -4,23 +4,10 @@
 #define DefaultStackValue 100
 
 /* Constructor for the player object */
-Player::Player(const string NewName)
+Player::Player()
 {
 	/* Set chosen name and default stack value */
-	Name = NewName;
 	Stack = DefaultStackValue;
-}
-
-/* Destructor for the player object */
-//Player::~Player()
-//{
-	/* Destroy player object */
-//}
-
-/* Return the player's name */
-const string Player::GetName() const
-{
-	return Name;
 }
 
 /* Return the player's stack value */
