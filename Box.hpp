@@ -15,7 +15,6 @@ class Box: public Participant
 
 	public:
 		Box(Player* NewOwner, const bool Split = false);
-		string GetOwner() const;
 		Player* GetOwnerObj() const;
 		void Status();
 		void PlaceBet(const float NewBet);

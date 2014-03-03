@@ -14,12 +14,6 @@ Box::Box(Player *NewOwner, const bool Split)
 	SplitBox = Split;
 }
 
-/* Return the name of the owner of the box */
-string Box::GetOwner() const
-{
-	return Owner->GetName();
-}
-
 /* Return a pointer to the owner of the box */
 Player* Box::GetOwnerObj() const
 {
@@ -97,7 +91,6 @@ void Box::PlaceInsurance()
 void Box::ReceiveInsurance()
 {
 	Owner->AddToStack(Bet + Insurance);
-	cout << "  Wins insurance bet and collects " << Insurance << " from the dealer" << endl;
 	Insurance = 0;
 }
 
@@ -105,7 +98,6 @@ void Box::ReceiveInsurance()
 void Box::RetrieveBet()
 {
 	Owner->AddToStack(Bet);
-	cout << "  Bet of " << Bet << " returned" << endl;
 }
 
 void Box::ReturnToStack(int ReturnedChipValue)
@@ -125,13 +117,11 @@ void Box::ReceiveWinnings()
 	if(CheckHand() == 21 and Hand.size() == 2 and SplitBox == false)
 	{
 		Owner->AddToStack(Bet + Bet + (Bet/2));
-		cout << "  Wins bet and collects " << (Bet + (Bet/2)) << " from the dealer" << endl;			
 	}
 	/* A non-blackjack win */
 	else
 	{
 		Owner->AddToStack(Bet + Bet);
-		cout << "  Wins bet and collects " << Bet << " from the dealer" << endl;
 	}
 }
 
@@ -169,22 +159,7 @@ void Box::ReturnCards()
 /* Declare the status of the current hand */
 void Box::Status()
 {
-	cout << Owner->GetName();
-
-	/* If the current box is the result of a split hand, display a different message */
-	if(CheckSplit() == true)
-	{
-		cout << " (Split Hand)";
-		QString SplitHandWords = QString::fromStdString(Owner->GetName()) + " (Split Hand)";
-		emit updatePlayersName(SplitHandWords);
-	}
-	else
-	{
-		emit updatePlayersName(QString::fromStdString(Owner->GetName()));
-	}
-	cout << ": (" << Owner->CountStack() << " in your stack, " << Bet << " on the table) You are holding: " << endl << endl;	
-
 	ListHand();
-	emit updatePlayersHandValue(StatusResult());
+	emit updatePlayersHandValue(HandValueString());
 }
 
