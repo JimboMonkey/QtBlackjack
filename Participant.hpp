@@ -18,7 +18,7 @@ class Participant: public QObject
 	public:
 		int CheckHand() const;
 		void TakeCard(const Card& DealtCard);
-		QString StatusResult() const;
+		QString HandValueString() const;
 		void ListHand();
 		const string CheckCard(const int CardIndex) const;
 		int CountCards() const;

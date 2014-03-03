@@ -14,39 +14,18 @@ void Participant::ListHand()
 
 	for(i = 0; i < Hand.size(); i++)
 	{
-		//cout << "  " << Hand.at(i).GetName() << "(" << Hand.at(i).GetValue() << ")" << " of " << Hand.at(i).GetSuit() << endl;
 		QString CardName = Hand.at(i).GetName();
 		QString CardSuit = Hand.at(i).GetSuit();
 		QString LoadCardName = "PlayerCards/" + CardName + CardSuit + ".png";
 		emit updatePlayersHand(LoadCardName, i);	
 	}
-	cout << endl;
 }
 
 /* State the result of the current hand */
-QString Participant::StatusResult() const
+QString Participant::HandValueString() const
 {
 	QString strHandValue;	
 
-	/* Current box is bust */
-	if (HandValue > 21 and AcesHeld == 0)
-	{
-		//cout << "  Bust with ";
-		//strHandValue = " Bust with ";
-	}
-	/* Current box is holding aces so has a soft hand */
-	else if (AcesHeld > 0 and HandValue != 21)
-	{
-		//cout << "  Soft ";
-		strHandValue = "S";
-	}
-	/* State the value of the current hand */
-	else
-	{
-		//cout << "  ";
-		strHandValue = "";
-	}
-	//cout << HandValue << endl << endl;
 	strHandValue += QString::number(HandValue);
 	return strHandValue;
 }
@@ -79,38 +58,7 @@ void Participant::SoftenAce()
 /* Receive the card dealt to the box */
 void Participant::TakeCard(const Card& DealtCard)
 {
-/*	const char* Suits[] = {"Spades", "Hearts", "Diamonds", "Clubs"};
-	const int Values[] = {11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
-	const char* Names[] = {"Ace",
-		       "Two",
-		       "Three",
-		       "Four",
-		       "Five",
-		       "Six",
-		       "Seven",
-		       "Eight",
-		       "Nine",
-		       "Ten",
-		       "Jack",
-		       "Queen",
-		       "King"};
-
-	string UserEntry;
-	int CardVal;
-	cout << "Card value?" << endl;
-	getline(cin, UserEntry);
-	stringstream StrToInt(UserEntry); 
-	StrToInt >> CardVal;
-	HandValue += CardVal+1;
-
-	Card TestCard;
-
-	TestCard.SetSuit(Suits[2]);
-	TestCard.SetName(Names[CardVal]);
-	TestCard.SetValue(Values[CardVal]);*/
-
 	Hand.push_back(DealtCard);
-//	Hand.push_back(TestCard);
 	HandValue += DealtCard.GetValue();
 
 	/* Keep a count of the number of aces held */
