@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <QDebug>
 
 #include "Participant.hpp"
 #include "Card.hpp"

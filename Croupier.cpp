@@ -62,7 +62,7 @@ const Card Croupier::Deal()
 	string CompareString = Shoe[NextCard].GetName();
 	if (CompareString.compare("Cut") == 0)
 	{	
-		cout << "Cut card reached. Reshuffling cards...." << endl << endl;
+		qDebug() << "Cut card reached. Reshuffling cards...." << endl << endl;
 		/* Move the cut card to the end of the pack so that it isn't shuffled */
 		TempStore = Shoe[ShoeSize];
 		Shoe[ShoeSize] = Shoe[NextCard];
@@ -121,14 +121,13 @@ void Croupier::List()
 	/* Run through all the cards in the shoe (including the cut card, hence the +1) */
 	for(i = 0; i < ShoeSize + 1; i++)
 	{
-		cout << i << "	" << Shoe[i].GetName() << " of " << Shoe[i].GetSuit() << " has the value " << Shoe[i].GetValue() << endl;
+		qDebug() << i << "	" << Shoe[i].GetName() << " of " << Shoe[i].GetSuit() << " has the value " << Shoe[i].GetValue() << endl;
 	}
 }
 
 /* Declare the dealers upcard */
 void Croupier::InitialStatus()
 {
-	cout << "Dealer's upcard is the " << Hand.front().GetName() << " of " << Hand.front().GetSuit() << endl << endl;
 	QString CardName = Hand.front().GetName();
 	QString CardSuit = Hand.front().GetSuit();
 	QString LoadCardName = "DealerCards/" + CardName + CardSuit + ".png";
@@ -139,9 +138,8 @@ void Croupier::InitialStatus()
 /* State the dealer's hand */
 void Croupier::Status()
 {
-	cout << "Dealer is holding: " << endl << endl;	
 	ListHand();
-	emit updateDealersHandValue(StatusResult());
+	emit updateDealersHandValue(HandValueString());
 }
 
 /* Reset all flags of the dealer */
@@ -159,12 +157,11 @@ void Croupier::ListHand()
 	
 	for(i = 0; i < Hand.size(); i++)
 	{
-		cout << "  " << Hand.at(i).GetName () << " of " << Hand.at(i).GetSuit() << endl;
+		qDebug() << "  " << Hand.at(i).GetName () << " of " << Hand.at(i).GetSuit() << endl;
 		QString CardName = Hand.at(i).GetName();
 		QString CardSuit = Hand.at(i).GetSuit();
 		QString LoadCardName = "DealerCards/" + CardName + CardSuit + ".png";
 		emit updateDealersHand(LoadCardName, i);
 	}
-	cout << endl;
 }
 
