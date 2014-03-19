@@ -45,10 +45,10 @@ Box* GameThread::NewBox(Player* pPlayer, bool Split)
 	Box *pBox;
 
 	pBox = new Box(pPlayer, Split);
-	connect(pBox, SIGNAL(updatePlayersHand(QString,int)), this, SIGNAL(updatePlayersHand(QString,int)));
-	connect(pBox, SIGNAL(updatePlayersHandValue(QString)), this, SIGNAL(updatePlayersHandValue(QString)));
-	connect(pBox, SIGNAL(ClearPlayersHand()), this, SIGNAL(clearPlayersHand()));
-	connect(pBox, SIGNAL(updateBet(QString)), this, SIGNAL(updateBet(QString)));
+	connect(pBox, SIGNAL(updatePlayersHand(QString,int)), this, SIGNAL(UpdatePlayersHand(QString,int)));
+	connect(pBox, SIGNAL(updatePlayersHandValue(QString)), this, SIGNAL(UpdatePlayersHandValue(QString)));
+	connect(pBox, SIGNAL(ClearPlayersHand()), this, SIGNAL(ClearPlayersHand()));
+	connect(pBox, SIGNAL(updateBet(QString)), this, SIGNAL(UpdateBetValue(QString)));
 	connect(this, SIGNAL(IncreaseBet(float)), pBox, SLOT(IncreaseBet(float)));
 	connect(this, SIGNAL(DecreaseBet(float)), pBox, SLOT(DecreaseBet(float)));
 
@@ -61,13 +61,11 @@ void GameThread::SeatPlayers(Table& BlackJackTable)
 	Box *pBox;
 	Player *pPlayer;
 
-	ClearScreen();
 	/* Create a player object to link to each box */
-	pPlayer = new Player("Jimbo");
-	connect(pPlayer, SIGNAL(updateStack(QString)), this, SIGNAL(updateStack(QString)));
+	pPlayer = new Player();
+	connect(pPlayer, SIGNAL(updateStack(QString)), this, SIGNAL(UpdateStackValue(QString)));
 	pBox = NewBox(pPlayer, false);
 	BlackJackTable.AddBox(pBox, 0);
-	ClearScreen();
 }
 
 /* Collect bets from every player */
@@ -80,10 +78,10 @@ void GameThread::CollectBets(Table& BlackJackTable)
 	connect(this, SIGNAL(Choice()), &eventLoop, SLOT(quit()));
 
 	emit ButtonVisibility(false, false, false, false, false, false, false, false);
-	emit updateStatus("Place your bet");
-	emit DisableChips(true);	
+	emit UpdateGameStatus("Place your bet");
+	emit EnableChips(true);	
 	eventLoop.exec();
-	emit DisableChips(false);
+	emit EnableChips(false);
 }
 
 /* Deal everyone their first two cards (including the dealer) */
@@ -116,7 +114,7 @@ void GameThread::InsuranceOffers(Table& BlackJackTable, Croupier& Dealer)
 	{
 		// Display dealers cards - one face up, one face down
 		Dealer.InitialStatus();
-		emit updateStatus("Blackjack!");
+		emit UpdateGameStatus("Blackjack!");
 		emit ResultTextVisibility(false, false, true, false);
 		MySleep(2);
 		if(CheckChoice() == 8)
@@ -140,11 +138,11 @@ void GameThread::InsuranceOffers(Table& BlackJackTable, Croupier& Dealer)
 		/* Hands of blackjack receive different message for same offer */
 		if (CurrentBox->CheckHand() == 21)
 		{
-			emit updateStatus("The dealer is showing an ace\nEven money?");
+			emit UpdateGameStatus("The dealer is showing an ace\nEven money?");
 		}
 		else
 		{
-			emit updateStatus("The dealer is showing an ace\nWould you like insurance?");
+			emit UpdateGameStatus("The dealer is showing an ace\nWould you like insurance?");
 		}
 		emit ButtonVisibility(false, false, false, false, false, true, true, false);
 		eventLoop.exec();
@@ -157,7 +155,6 @@ void GameThread::InsuranceOffers(Table& BlackJackTable, Croupier& Dealer)
 		else if(CheckChoice() == 7)
 		{
 		}
-		ClearScreen();
 	}
 }
 
@@ -170,7 +167,7 @@ bool GameThread::CheckForBlackJack(Table& BlackJackTable, Croupier& Dealer)
 	/* If the dealer has blackjack, show it! */
 	if (Dealer.CheckHand() == 21)
 	{
-		emit updateStatus("Dealer has blackjack!");
+		emit UpdateGameStatus("Dealer has blackjack!");
 		Dealer.Status();
 		DealerBlackjack = true;
 		emit ResultTextVisibility(false, false, false, true);
@@ -198,13 +195,13 @@ bool GameThread::CheckForBlackJack(Table& BlackJackTable, Croupier& Dealer)
 		/* Player has taken out insurance */
 		if (CurrentBox->CheckInsurance() == true)
 		{
-			emit updateStatus("Even money");
+			emit UpdateGameStatus("Even money");
 			PauseForMessage = true;
 		}
 		/* Player hasn't taken out insurance and Dealer has blackjack */
 		else if(CurrentBox->CheckInsurance() == false and DealerBlackjack == true)
 		{
-			emit updateStatus("Dealer and player both have blackjack!\nPush!");
+			emit UpdateGameStatus("Dealer and player both have blackjack!\nPush!");
 			PauseForMessage = true;
 		}
 	}
@@ -227,12 +224,12 @@ bool GameThread::CheckForBlackJack(Table& BlackJackTable, Croupier& Dealer)
 		/* Dealer doesn't have blackjack */
 		if (DealerBlackjack == false)
 		{
-			emit updateStatus("Dealer doesn't have blackjack\nInsurance bet lost");
+			emit UpdateGameStatus("Dealer doesn't have blackjack\nInsurance bet lost");
 		}
 		/* Dealer has blackjack */
 		else
 		{
-			emit updateStatus("Dealer has blackjack\nInsurance bet pays out");
+			emit UpdateGameStatus("Dealer has blackjack\nInsurance bet pays out");
 		}
 		MySleep(2);
 		if (CheckChoice() == 8)
@@ -255,11 +252,11 @@ void GameThread::StateOptions(Box* CurrentBox, bool PlayersFirstGo)
 
 	if (CurrentBox->CheckSplit() == true)
 	{
-		emit updateStatus("Split Hand\nWhat would you like to do?");			
+		emit UpdateGameStatus("Split Hand\nWhat would you like to do?");			
 	}
 	else
 	{
-		emit updateStatus("What would you like to do?");
+		emit UpdateGameStatus("What would you like to do?");
 	}
 
 	/* Initial hand stage */
@@ -316,20 +313,17 @@ bool GameThread::PlayersPlay(Table& BlackJackTable, Croupier& Dealer)
 	{
 		Box* CurrentBox = BlackJackTable.GetBox(BoxIndex);
 		PlayersFirstGo = true;
-		ClearScreen();
 
 		/* Check player doesn't already have blackjack */
 		if (CurrentBox->CheckHand() != 21)
 		{			
-			//emit clearPlayersHand();
 			do
 			{
 				Box* CurrentBox = BlackJackTable.GetBox(BoxIndex);
 				/* Check first two cards in case a split is possible */
 				string FirstCard = CurrentBox->CheckCard(0);
 				string SecondCard = CurrentBox->CheckCard(1);
-				
-				ClearScreen();
+
 				Dealer.InitialStatus(); 
 				CurrentBox->Status();
 					
@@ -337,7 +331,7 @@ bool GameThread::PlayersPlay(Table& BlackJackTable, Croupier& Dealer)
 				if(CurrentBox->CheckHand() == 21)
 				{
 					/* Auto-stand on a 21 */
-					emit updateStatus("Auto-standing on 21");
+					emit UpdateGameStatus("Auto-standing on 21");
 					emit ButtonVisibility(false, false, false, false, false, false, false, false);
 					PlayersStanding = true;
 					MySleep(2);
@@ -361,8 +355,7 @@ bool GameThread::PlayersPlay(Table& BlackJackTable, Croupier& Dealer)
 					/* If the hit causes them to go bust */
 					if(CurrentBox->CheckHand() > 21)
 					{
-						ClearScreen();
-						emit updateStatus("Bust!");
+						emit UpdateGameStatus("Bust!");
 						emit ButtonVisibility(false, false, false, false, false, false, false, false);
 						CurrentBox->Status();
 						emit ResultTextVisibility(true, false, false, false);
@@ -374,7 +367,6 @@ bool GameThread::PlayersPlay(Table& BlackJackTable, Croupier& Dealer)
 				/* Player stands */
 				else if(CheckChoice() == 2)
 				{
-					cout << "standing!" << endl;
 					PlayersStanding = true;
 				}
 				else if(CheckChoice() == 8)
@@ -389,7 +381,7 @@ bool GameThread::PlayersPlay(Table& BlackJackTable, Croupier& Dealer)
 					/* Players can only surrender on their first go */
 					if (PlayersFirstGo == true and CheckChoice() == 5)
 					{
-						emit updateStatus("You surrendered\nHalf of bet returned");
+						emit UpdateGameStatus("You surrendered\nHalf of bet returned");
 						emit ButtonVisibility(false, false, false, false, false, false, false, false);
 						CurrentBox->Surrender();
 						MySleep(2);
@@ -401,18 +393,17 @@ bool GameThread::PlayersPlay(Table& BlackJackTable, Croupier& Dealer)
 						/* Player doubles */
 						if (CheckChoice() == 3)
 						{		
-							ClearScreen();
 							/* Place bet again to double initial bet and take one last card */
-							emit IncreaseBet(CurrentBox->CountBet());
-							emit updateStatus("Initial bet doubled\nDealing one more card....");
+							CurrentBox->IncreaseBet(CurrentBox->CountBet());
+							emit UpdateGameStatus("Initial bet doubled\nDealing one more card....");
 							emit ButtonVisibility(false, false, false, false, false, false, false, false);
 							MySleep(2);
 							if (CheckChoice() == 8)							
 							{
 								break;
 							}
-
-							emit updateBet("0");
+							// Hide the new bet value after the 2 second pause
+							emit UpdateBetValue("0");
 							DealtCard = Dealer.Deal();
 							CurrentBox->TakeCard(DealtCard);
 							
@@ -426,8 +417,7 @@ bool GameThread::PlayersPlay(Table& BlackJackTable, Croupier& Dealer)
 							if(CurrentBox->CheckHand() > 21)
 							{
 								PlayersStanding = false;
-								ClearScreen();
-								emit updateStatus("Bust!");
+								emit UpdateGameStatus("Bust!");
 								emit ButtonVisibility(false, false, false, false, false, false, false, false);
 								CurrentBox->Status();
 								emit ResultTextVisibility(true, false, false, false);
@@ -447,16 +437,10 @@ bool GameThread::PlayersPlay(Table& BlackJackTable, Croupier& Dealer)
 						/* Players can split if they have two of the same card */
 						if (FirstCard.compare(SecondCard) == 0 and CheckChoice() == 4)
 						{
-							PlayersFirstGo = false;		
+							PlayersFirstGo = false;	
 							/* Add a new box to the table in the next position with same owner as the current box */
 							Box *pBox;
 							pBox = NewBox(CurrentBox->GetOwnerObj(), true);
-/*							pBox = new Box(CurrentBox->GetOwnerObj(), true);
-							connect(pBox, SIGNAL(updatePlayersHand(QString,int)), this, SIGNAL(updatePlayersHand(QString,int)));
-							connect(pBox, SIGNAL(updatePlayersHandValue(QString)), this, SIGNAL(updatePlayersHandValue(QString)));
-							connect(pBox, SIGNAL(updateBet(QString)), this, SIGNAL(updateBet(QString)));
-							connect(this, SIGNAL(IncreaseBet(float)), pBox, SLOT(IncreaseBet(float)));
-							connect(this, SIGNAL(DecreaseBet(float)), pBox, SLOT(DecreaseBet(float)));*/
 							BlackJackTable.AddBox(pBox, BoxIndex + 1);
 
 							/* Have to redefine CurrentBox after the insert */	
@@ -465,7 +449,11 @@ bool GameThread::PlayersPlay(Table& BlackJackTable, Croupier& Dealer)
 
 							/* New box places same bet as current box */
 							SplitBox->IncreaseBet(CurrentBox->CountBet());
-							emit updateBet("0");
+							// The above call to IncreaseBet automatically updates the GUI
+							// with the new bet value.  Send an update of zero to override this
+							// Otherwise the new bet value stays on the screen until a decision
+							// is made which doesn't match the normal time delay behaviour	
+							emit UpdateBetValue("0");
 							
 							SplitBox->TakeCard(CurrentBox->MoveSplitCard());
 							/* Deal a new card for both boxes */
@@ -487,7 +475,6 @@ bool GameThread::PlayersPlay(Table& BlackJackTable, Croupier& Dealer)
 			CurrentBox->Status();
 			MySleep(2);
 		}
-//		emit clearPlayersHand();
 		if (CheckChoice() == 8)							
 		{
 			return false;
@@ -502,22 +489,20 @@ void GameThread::DealerPlays(Croupier& Dealer)
 {
 	Card DealtCard;
 
-	emit updateStatus("Dealer plays....");
+	emit UpdateGameStatus("Dealer plays....");
 	/* Show dealer's current status before continuing */
-	ClearScreen();
 	Dealer.Status();
 	MySleep(1);
 
 	/* Keep taking cards until over 17 or bust */
 	while ((Dealer.CheckHand() < 17) && (CheckChoice() != 8))
 	{
-		ClearScreen();
 		DealtCard = Dealer.Deal();
 		Dealer.TakeCard(DealtCard);
 		Dealer.Status();
 		if(Dealer.CheckHand() > 21)
 		{
-			emit updateStatus("Dealer bust!");
+			emit UpdateGameStatus("Dealer bust!");
 			emit ResultTextVisibility(false, true, false, false);
 			MySleep(2);
 			emit ResultTextVisibility(false, false, false, false);
@@ -564,8 +549,6 @@ void GameThread::SettleBets(Table& BlackJackTable, Croupier& Dealer)
 
 	bool PlayerWonBet;
 
-	ClearScreen();
-
 	/* Give summary for every box at the table */
 	for(BoxIndex = 0; BoxIndex < BlackJackTable.CountBoxes(); BoxIndex++)
 	{
@@ -579,7 +562,7 @@ void GameThread::SettleBets(Table& BlackJackTable, Croupier& Dealer)
 		StrHandNum = NumberToString(BoxIndex + 1);
 		StrNumHands = NumberToString(BlackJackTable.CountBoxes());
 
-		emit updateStatus("Result for Hand " + QString::fromStdString(StrHandNum) + " of " + QString::fromStdString(StrNumHands));
+		emit UpdateGameStatus("Result for Hand " + QString::fromStdString(StrHandNum) + " of " + QString::fromStdString(StrNumHands));
 	
 		/* If player didn't surrender */
 		if(CurrentBox->CheckSurrended() == false)
@@ -720,14 +703,14 @@ void GameThread::SettleBets(Table& BlackJackTable, Croupier& Dealer)
 		//ResultsSummary += "Win insurance bet and collect 1500 from the dealer";
 
 		QString qstr = QString::fromStdString(ResultsSummary);
-		updateResultsSummary(qstr);
+		UpdateResultsSummary(qstr);
 		MySleep(4.0);
 		if(CheckChoice() == 8)
 		{
 			return; 
 		}
 		// Send nothing to results summary to hide it
-		updateResultsSummary("");
+		UpdateResultsSummary("");
 	}
 }
 
@@ -749,8 +732,8 @@ void GameThread::run()
 	/* Create a dealer object which generates a shoe of cards which are then shuffled */
 	Croupier Dealer;
 
-	connect(&Dealer, SIGNAL(updateDealersHand(QString, int)), this, SIGNAL(updateDealersHand(QString, int)));
-	connect(&Dealer, SIGNAL(updateDealersHandValue(QString)), this, SIGNAL(updateDealersHandValue(QString)));
+	connect(&Dealer, SIGNAL(updateDealersHand(QString, int)), this, SIGNAL(UpdateDealersHand(QString, int)));
+	connect(&Dealer, SIGNAL(updateDealersHandValue(QString)), this, SIGNAL(UpdateDealersHandValue(QString)));
 
 	/* Game begins and loops until all players go bust! */
 	do
@@ -760,7 +743,7 @@ void GameThread::run()
 
 		if(CheckChoice() != 8)
 		{
-			emit updateBet("0");
+			emit UpdateBetValue("0");
 			/* Deal out the inital two cards to every player and the dealer */
 			InitialDeal(BlackJackTable, Dealer);
 		
@@ -785,8 +768,7 @@ void GameThread::run()
 					else
 					{*/
 						int DealersHandVal = Dealer.CheckHand();
-						emit updateStatus("Dealer was holding " + QString::number(DealersHandVal));
-						ClearScreen();
+						emit UpdateGameStatus("Dealer was holding " + QString::number(DealersHandVal));
 						Dealer.Status();
 						MySleep(2);
 					//}
@@ -805,8 +787,8 @@ void GameThread::run()
 
 		/* The dealer returns his cards */
 		Dealer.ReturnCards();
-		emit clearDealersHand();
-		emit clearPlayersHand();
+		emit ClearDealersHand();
+		emit ClearPlayersHand();
 
 		/* Clear all boxes containing splits */
 		BlackJackTable.RemoveSplits();
@@ -820,15 +802,15 @@ void GameThread::run()
 		{	
 			BlackJackTable.Clear();
 		}
-		emit Clearchips();
+		emit ClearChips();
 	}
 	while((BlackJackTable.CountBoxes() > 0) && (CheckChoice() != 8));
 
 	if(CheckChoice() != 8)
 	{
-		emit updateStatus("Game Over");
+		emit UpdateGameStatus("Game Over");
 		QString qstr = QString::fromStdString("You've run out of playable money!\n\nWould you like to play again?");
-		updateResultsSummary(qstr);
+		UpdateResultsSummary(qstr);
 	}
 	ButtonChoice = 0;
 }
