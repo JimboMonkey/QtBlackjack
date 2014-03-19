@@ -2,8 +2,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+// Qt includes
 #include <QMainWindow>
-
+#include <QGroupBox>
+#include <QMessageBox>
 #include <QThread>
 #include <QLabel>
 
@@ -14,12 +16,10 @@
 #include "GameThread.hpp"
 
 #include "ClickableLabel.hpp"
-#include "dragwidget.h"
+#include "ChipPile.hpp"
 
 #include <phonon/audiooutput.h>
 #include <phonon/mediaobject.h>
-#include <phonon/mediasource.h>
-#include <phonon/videowidget.h>
 
 namespace Ui 
 {
@@ -38,12 +38,9 @@ class MainWindow: public QMainWindow
 		void ClearScreen();
 		void CollectBets();
 		GameThread *myThread;
-		float XScalingFactor;
-		float YScalingFactor;
+		float XScale;
+		float YScale;
 	
-	protected:
-	//	void contextMenuEvent(QContextMenuEvent *event);
-
 	private:
 	    Ui::MainWindow *ui;
 	//	Table BlackJackTable;
@@ -65,12 +62,12 @@ class MainWindow: public QMainWindow
 		ClickableLabel *YesButton; 
 		ClickableLabel *NoButton; 
 		ClickableLabel *DoneButton; 
-		DragWidget *FivePile;
-		DragWidget *TenPile;
-		DragWidget *TwentyFivePile;
-		DragWidget *FiftyPile;
-		DragWidget *HundredPile;
-		DragWidget *BettingPile;
+		ChipPile *FivePile;
+		ChipPile *TenPile;
+		ChipPile *TwentyFivePile;
+		ChipPile *FiftyPile;
+		ChipPile *HundredPile;
+		ChipPile *BettingPile;
 
 		QLabel* labelBetValue;
 		QLabel* labelStackValue;
@@ -94,12 +91,14 @@ class MainWindow: public QMainWindow
 	    QVBoxLayout *AboutLayout;
 	    QHBoxLayout *TextLayout;
 	    QHBoxLayout *ButtonLayout;
+		QVBoxLayout *PicLayout;
 		QLabel *labelAboutPicture;
 		QLabel *labelAbout;
 		QString AboutBoxText;
 		QPushButton *OKButton;
 		QPushButton *LicenceButton;
 		QPushButton *CreditsButton;
+		QPushButton *AboutButton;
 
 		QAction *NewGame;
 		QAction *ToggleSound;
@@ -116,12 +115,12 @@ class MainWindow: public QMainWindow
 		QAction *ToggleSoundAction;
 		QAction *ExitAction;
 
-		Phonon::MediaObject* media;
+		Phonon::MediaObject* SoundFX;
 
 		QGroupBox* PlayersCards;
 		QGroupBox* DealersCards;
 
-	    QSignalMapper *m_sigmapper;
+	    QSignalMapper *ButtonMapping;
 
 	private slots:
 		void UpdateDealersHand(QString LoadCardName, int CardPosition);
@@ -135,10 +134,10 @@ class MainWindow: public QMainWindow
 		void UpdateGameStatus(QString Status);
 		void HideButtons(bool HitVisible, bool StandVisible, bool SurrenderVisible, bool DoubleVisible, bool SplitVisible, bool YesVisible, bool NoVisible, bool DoneVisible);
 		void ResultText(bool BustVisible, bool DealerBustVisible, bool BlackjackVisible, bool DealerBlackjackVisible);
-		void HideHandValueSpots();
+		void HideHandValues();
 		void UpdateResultsSummary(QString ResultsSummary);
-		void DisableChips(bool ActiveState);
-		void PositionYesNo();
+		void EnableChips(bool ActiveState);
+		void HandleEndGame();
 		void PlayWinSound();
 		void PlayLoseSound();
 		void PlayChipSound();
@@ -151,15 +150,5 @@ class MainWindow: public QMainWindow
 
 };
 
-
-
-class Sleeper: public QThread
-{
-	public:
-    	static void usleep(unsigned long usecs){QThread::usleep(usecs);}
-    	static void msleep(unsigned long msecs){QThread::msleep(msecs);}
-    	static void sleep(unsigned long secs){QThread::sleep(secs);}
-};
-
-#endif // MAINWINDOW_H
+#endif
 

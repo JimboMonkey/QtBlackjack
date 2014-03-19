@@ -1,34 +1,18 @@
 
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include <sstream>
-#include "dragwidget.h"
-#include <QGroupBox>
-#include <QMessageBox>
 
-//using namespace Phonon;
-
-#define MinimumBet 5
-/*#define XScalingFactor 0.533
-#define YScalingFactor 0.711
-
-#define XScalingFactor 1
-#define YScalingFactor 1*/
-
-MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 {
+	// Find out the user's screen resolution
 	QRect Screen = QApplication::desktop()->screenGeometry();
 
 	/* Scale = User's screen size / My screen size */
-	float wScale = Screen.width() / 1920.0;
-	float hScale = Screen.height() / 1080.0;
-
-	XScalingFactor = wScale;
-	YScalingFactor = hScale;
+	XScale = Screen.width() / 1920.0;
+	YScale = Screen.height() / 1080.0;
 
 	// Setup sound object
-	media = new Phonon::MediaObject(this);
-	createPath(media, new Phonon::AudioOutput(Phonon::MusicCategory, this));
+	SoundFX = new Phonon::MediaObject(this);
+	createPath(SoundFX, new Phonon::AudioOutput(Phonon::MusicCategory, this));
 
 	// Group the sets of cards to make
 	// it easier to move them together
@@ -36,27 +20,26 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 	DealersCards = new QGroupBox(this);
 
 	// Set the size and geometry of each card hand container
-	PlayersCards->setGeometry(195*XScalingFactor, 310*YScalingFactor, 300*XScalingFactor, 300*YScalingFactor);
-	DealersCards->setGeometry(230*XScalingFactor, 50*YScalingFactor, 300*XScalingFactor, 300*YScalingFactor);
+	PlayersCards->setGeometry(195*XScale, 310*YScale, 300*XScale, 300*YScale);
+	DealersCards->setGeometry(230*XScale, 50*YScale, 300*XScale, 300*YScale);
 
-/*	int posX = 195;
-	int posXDealer =230;*/
-	int posX = 0;
-	int posXDealer = 0;
+	// Set initial hand positions
+	int PlayerHandPosition = 0;
+	int DealerHandPosition = 0;
 
 	// Create a card label for every possible card in each hand
 	// No hand can hold more than 11 cards
 	for(int CardNumber = 0; CardNumber < 11; CardNumber++)
 	{
-		posX += 24;
-		posXDealer += 19;
+		PlayerHandPosition += 24;
+		DealerHandPosition += 19;
 
 		DealersHand[CardNumber] = new QLabel(DealersCards);
-		DealersHand[CardNumber]->setGeometry(posXDealer*XScalingFactor, 0, 191*XScalingFactor, 250*YScalingFactor);
+		DealersHand[CardNumber]->setGeometry(DealerHandPosition*XScale, 0, 191*XScale, 250*YScale);
 		DealersHand[CardNumber]->lower();
 
 		PlayersHand[CardNumber] = new QLabel(PlayersCards);
-		PlayersHand[CardNumber]->setGeometry(posX*XScalingFactor, 0, 191*XScalingFactor, 250*YScalingFactor);
+		PlayersHand[CardNumber]->setGeometry(PlayerHandPosition*XScale, 0, 191*XScale, 250*YScale);
 		PlayersHand[CardNumber]->lower();
 	}
 
@@ -100,197 +83,226 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 	QFont HandValueFont("mry_KacstQurn");
 
 	// ...and their associated sizes
-	LabelFont.setPointSizeF(24.0*XScalingFactor);
-	StatusFont.setPointSizeF(22.0*XScalingFactor);
-	ResultsFont.setPointSizeF(16.0*XScalingFactor);
-	HandValueFont.setPointSizeF(16.0*XScalingFactor);
+	LabelFont.setPointSizeF(24.0*XScale);
+	StatusFont.setPointSizeF(22.0*XScale);
+	ResultsFont.setPointSizeF(16.0*XScale);
+	HandValueFont.setPointSizeF(16.0*XScale);
 
-/*	QFont LabelFont("mry_KacstQurn", 18);
-	QFont StatusFont("mry_KacstQurn", 14);
-	QFont ResultsFont("mry_KacstQurn", 10);
-	QFont HandValueFont("mry_KacstQurn", 10);*/
-
+	// Create bet ring graphic and set its geometry
 	labelBetRing = new QLabel(this);
-//	labelBetRing->setGeometry(240*XScalingFactor, 520*YScalingFactor, 151*XScalingFactor, 111*YScalingFactor);
-	labelBetRing->setGeometry(240*XScalingFactor, 520*YScalingFactor, 140*XScalingFactor, 89*YScalingFactor);
+	labelBetRing->setGeometry(240*XScale, 520*YScale, 140*XScale, 89*YScale);
 	QPixmap BetRingPixMap(":/Images/Bet_Ring2.gif");
 	labelBetRing->setScaledContents(true);
 	labelBetRing->setPixmap(BetRingPixMap);
 
+	// Create stack value graphic and set its geometry
 	labelStackSpot = new QLabel(this);
-	labelStackSpot->setGeometry(240*XScalingFactor, 665*YScalingFactor, 139*XScalingFactor, 39*YScalingFactor);
+	labelStackSpot->setGeometry(240*XScale, 665*YScale, 139*XScale, 39*YScale);
 	QPixmap StackSpotPixMap(":/Images/StackSpot.png");
 	labelStackSpot->setScaledContents(true);
 	labelStackSpot->setPixmap(StackSpotPixMap);
 
+	// Create hand value graphic and set its geometry
 	labelHandValueSpot = new QLabel(this);
-	labelHandValueSpot->setGeometry(240*XScalingFactor, 655*YScalingFactor, 139*XScalingFactor, 39*YScalingFactor);
+	labelHandValueSpot->setGeometry(240*XScale, 655*YScale, 139*XScale, 39*YScale);
 	QPixmap HandValueSpotPixMap(":/Images/HandValueSpot.png");
 	labelHandValueSpot->setScaledContents(true);
 	labelHandValueSpot->setPixmap(HandValueSpotPixMap);
+	// Not visible at startup
 	labelHandValueSpot->setVisible(false);
 
+	// Create dealer hand value graphic and set its geometry
 	labelDealersHandValueSpot = new QLabel(this);
-	labelDealersHandValueSpot->setGeometry(240*XScalingFactor, 655*YScalingFactor, 139*XScalingFactor, 39*YScalingFactor);
+	labelDealersHandValueSpot->setGeometry(240*XScale, 655*YScale, 139*XScale, 39*YScale);
 	QPixmap DealerHandValueSpotPixMap(":/Images/HandValueSpot.png");
 	labelDealersHandValueSpot->setScaledContents(true);
 	labelDealersHandValueSpot->setPixmap(HandValueSpotPixMap);
+	// Not visible at startup
 	labelDealersHandValueSpot->setVisible(false);
 
+	// Create results summary graphic and set its geometry
 	labelResultsBubble = new QLabel(this);
-	labelResultsBubble->setGeometry(25*XScalingFactor, 250*YScalingFactor, 567*XScalingFactor, 165*YScalingFactor);
+	labelResultsBubble->setGeometry(25*XScale, 250*YScale, 567*XScale, 165*YScale);
 	QPixmap ResultsBubblePixMap(":/Images/ResultsSummary.gif");
 	labelResultsBubble->setScaledContents(true);	
 	labelResultsBubble->setPixmap(ResultsBubblePixMap);
+	// Not visible at startup
 	labelResultsBubble->setVisible(false);
 
+	// Create game status graphic and set its geometry
 	labelStatusBubble = new QLabel(this);
-	labelStatusBubble->setGeometry(20*XScalingFactor, 15*YScalingFactor, 559*XScalingFactor, 94*YScalingFactor);
-//	labelStatusBubble->setGeometry(10.66, 8, 297.97, 50);
+	labelStatusBubble->setGeometry(20*XScale, 15*YScale, 559*XScale, 94*YScale);
 	QPixmap StatusBubblePixMap(":/Images/StatusBubble.png");
 	labelStatusBubble->setScaledContents(true);
 	labelStatusBubble->setPixmap(StatusBubblePixMap);
 
+	// Create bet value label and set its geometry and font
 	labelBetValue = new QLabel(this);
-	labelBetValue->setGeometry(110*XScalingFactor, 555*YScalingFactor, 121*XScalingFactor, 41*YScalingFactor);
+	labelBetValue->setGeometry(110*XScale, 555*YScale, 121*XScale, 41*YScale);
 	labelBetValue->setPalette(*BetValueTextPalette);
 	labelBetValue->setFont(LabelFont);
 	labelBetValue->setAlignment(Qt::AlignRight);
 
+	// Create stack value label and set its geometry
 	labelStackValue = new QLabel(this);
-	labelStackValue->setGeometry(250*XScalingFactor, 662*YScalingFactor, 121*XScalingFactor, 41*YScalingFactor);
-//	labelStackValue->setGeometry(133, 352.88, 64.50, 21.86);
+	labelStackValue->setGeometry(250*XScale, 662*YScale, 121*XScale, 41*YScale);
 	labelStackValue->setPalette(*TextPalette);	
 	labelStackValue->setFont(LabelFont);
 	labelStackValue->setAlignment(Qt::AlignCenter);
 
+	// Create game status label and set its geometry
 	labelGameStatus = new QLabel(this);
-	labelGameStatus->setGeometry(30*XScalingFactor, 20*YScalingFactor, 541*XScalingFactor, 81*YScalingFactor);
+	labelGameStatus->setGeometry(30*XScale, 20*YScale, 541*XScale, 81*YScale);
 	labelGameStatus->setPalette(*TextPalette);
 	labelGameStatus->setFont(StatusFont);
 	labelGameStatus->setAlignment(Qt::AlignCenter);
 
+	// Create player hand value label and set its geometry
 	labelPlayersHandValue = new QLabel(this);
 	labelPlayersHandValue->setPalette(*TextPalette);
 	labelPlayersHandValue->setFont(HandValueFont);
 	labelPlayersHandValue->setAlignment(Qt::AlignCenter);
+	// Not visible at startup
 	labelPlayersHandValue->setVisible(false);
 
+	// Create dealer hand value label and set its geometry
 	labelDealersHandValue = new QLabel(this);
 	labelDealersHandValue->setPalette(*TextPalette);
 	labelDealersHandValue->setFont(HandValueFont);
 	labelDealersHandValue->setAlignment(Qt::AlignCenter);
+	// Not visible at startup
 	labelDealersHandValue->setVisible(false);
 
+	// Create results summary label and set its geometry
 	labelResultsSummary = new QLabel(this);
-	labelResultsSummary->setGeometry(35*XScalingFactor, 270*YScalingFactor, 547*XScalingFactor, 315*YScalingFactor);
+	labelResultsSummary->setGeometry(35*XScale, 270*YScale, 547*XScale, 315*YScale);
 	labelResultsSummary->setPalette(*TextPalette);
 	labelResultsSummary->setFont(ResultsFont);
 	labelResultsSummary->setAlignment(Qt::AlignTop);
-	//labelResultsSummary->raise();
+	// Not visible at startup
 	labelResultsSummary->setVisible(false);
 
+	// Create player bust graphic and set its geometry
 	labelBustText = new QLabel(this);
-	labelBustText->setGeometry(160*XScalingFactor, 330*YScalingFactor, 321*XScalingFactor, 141*YScalingFactor);
+	labelBustText->setGeometry(160*XScale, 330*YScale, 321*XScale, 141*YScale);
 	QPixmap BustTextPixMap(":/Images/BustText.gif");
 	labelBustText->setPixmap(BustTextPixMap);
 	labelBustText->setScaledContents(true);
+	// Not visible at startup
 	labelBustText->setVisible(false);
 
+	// Create dealer bust graphic and set its geometry
 	labelDealersBustText = new QLabel(this);
-	labelDealersBustText->setGeometry(160*XScalingFactor, 120*YScalingFactor, 291*XScalingFactor, 111*YScalingFactor);
+	labelDealersBustText->setGeometry(160*XScale, 120*YScale, 291*XScale, 111*YScale);
 	labelDealersBustText->setPixmap(BustTextPixMap);
 	labelDealersBustText->setScaledContents(true);
+	// Not visible at startup
 	labelDealersBustText->setVisible(false);
 
+	// Create player blackjack graphic and set its geometry
 	labelBlackjackText = new QLabel(this);
-	labelBlackjackText->setGeometry(100*XScalingFactor, 330*YScalingFactor, 400*XScalingFactor, 227*YScalingFactor);
+	labelBlackjackText->setGeometry(100*XScale, 330*YScale, 400*XScale, 227*YScale);
 	QPixmap BlackjackTextPixMap(":/Images/BlackjackText.gif");
 	labelBlackjackText->setPixmap(BlackjackTextPixMap);
 	labelBlackjackText->setScaledContents(true);
+	// Not visible at startup
 	labelBlackjackText->setVisible(false);
 
+	// Create dealer blackjack graphic and set its geometry
 	labelDealersBlackjackText = new QLabel(this);
-	labelDealersBlackjackText->setGeometry(140*XScalingFactor, 125*YScalingFactor, 320*XScalingFactor, 168*YScalingFactor);
+	labelDealersBlackjackText->setGeometry(140*XScale, 125*YScale, 320*XScale, 168*YScale);
 	labelDealersBlackjackText->setPixmap(BlackjackTextPixMap);
 	labelDealersBlackjackText->setScaledContents(true);
+	// Not visible at startup
 	labelDealersBlackjackText->setVisible(false);
 
-    FivePile = new DragWidget(this, false);
+	// Create draggable chip pile for fives
+    FivePile = new ChipPile(this, false);
 	FivePile->populate(5);
-	FivePile->setGeometry(15*XScalingFactor, 690*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
+	FivePile->setGeometry(15*XScale, 690*YScale, 88*XScale, 61*YScale);
 	FivePile->raise();
 
-	TenPile = new DragWidget(this, false);
+	// Create draggable chip pile for tens
+	TenPile = new ChipPile(this, false);
 	TenPile->populate(10);
-	TenPile->setGeometry(135*XScalingFactor, 705*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
+	TenPile->setGeometry(135*XScale, 705*YScale, 88*XScale, 61*YScale);
 	TenPile->raise();
 
-	TwentyFivePile = new DragWidget(this, false);	
+	// Create draggable chip pile for twenty-fives
+	TwentyFivePile = new ChipPile(this, false);	
 	TwentyFivePile->populate(25);
-	TwentyFivePile->setGeometry(265*XScalingFactor, 715*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
+	TwentyFivePile->setGeometry(265*XScale, 715*YScale, 88*XScale, 61*YScale);
 	TwentyFivePile->raise();
 
-	FiftyPile = new DragWidget(this, false);	
+	// Create draggable chip pile for fiftys
+	FiftyPile = new ChipPile(this, false);	
 	FiftyPile->populate(50);
-	FiftyPile->setGeometry(385*XScalingFactor, 705*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
+	FiftyPile->setGeometry(385*XScale, 705*YScale, 88*XScale, 61*YScale);
 	FiftyPile->raise();
 
-	HundredPile = new DragWidget(this, false);	
+	// Create draggable chip pile for hundreds
+	HundredPile = new ChipPile(this, false);	
 	HundredPile->populate(100);
-	HundredPile->setGeometry(500*XScalingFactor, 690*YScalingFactor, 88*XScalingFactor, 61*YScalingFactor);
+	HundredPile->setGeometry(500*XScale, 690*YScale, 88*XScale, 61*YScale);
 	HundredPile->raise();
 
-	BettingPile = new DragWidget(this, true);
+	// Create draggable chip bet pile
+	BettingPile = new ChipPile(this, true);
 	BettingPile->populate(200);
-//	BettingPile->setGeometry(267, 414, 88, 200);
-	BettingPile->setGeometry(210*XScalingFactor, 414*YScalingFactor, 200*XScalingFactor, 220*YScalingFactor);
+	BettingPile->setGeometry(210*XScale, 414*YScale, 200*XScale, 220*YScale);
 
+	// Create clickable done button
 	DoneButton = new ClickableLabel(this);
-	DoneButton->setGeometry(300*XScalingFactor, 580*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
+	DoneButton->setGeometry(300*XScale, 580*YScale, 100*XScale, 37*YScale);
 	QPixmap DoneButtonPixMap(":/Images/DoneGreenButtonSmall.png");
 	DoneButton->setScaledContents(true);
 	DoneButton->setPixmap(DoneButtonPixMap);
 	
+	// Create clickable hit button
 	HitButton = new ClickableLabel(this);
-	HitButton->setGeometry(335*XScalingFactor, 350*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
+	HitButton->setGeometry(335*XScale, 350*YScale, 100*XScale, 37*YScale);
 	QPixmap HitButtonPixMap(":/Images/HitButtonSmall.png");
 	HitButton->setScaledContents(true);
 	HitButton->setPixmap(HitButtonPixMap);
-	HitButton->raise();
 
+	// Create clickable stand button
 	StandButton = new ClickableLabel(this);
-	StandButton->setGeometry(345*XScalingFactor, 382*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
+	StandButton->setGeometry(345*XScale, 382*YScale, 100*XScale, 37*YScale);
 	QPixmap StandButtonPixMap(":/Images/StandButtonSmall.png");
 	StandButton->setScaledContents(true);
 	StandButton->setPixmap(StandButtonPixMap);
 
+	// Create clickable yes button
 	YesButton = new ClickableLabel(this);
-	YesButton->setGeometry(335*XScalingFactor, 350*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
+	YesButton->setGeometry(335*XScale, 350*YScale, 100*XScale, 37*YScale);
 	QPixmap YesButtonPixMap(":/Images/YesButtonSmall.png");
 	YesButton->setScaledContents(true);
 	YesButton->setPixmap(YesButtonPixMap);
 
+	// Create clickable no button
 	NoButton = new ClickableLabel(this);
-	NoButton->setGeometry(345*XScalingFactor, 382*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
+	NoButton->setGeometry(345*XScale, 382*YScale, 100*XScale, 37*YScale);
 	QPixmap NoButtonPixMap(":/Images/NoButtonSmall.png");
 	NoButton->setScaledContents(true);
 	NoButton->setPixmap(NoButtonPixMap);
 
+	// Create clickable surrender button
 	SurrenderButton = new ClickableLabel(this);
-	SurrenderButton->setGeometry(355*XScalingFactor, 414*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
+	SurrenderButton->setGeometry(355*XScale, 414*YScale, 100*XScale, 37*YScale);
 	QPixmap SurrenderButtonPixMap(":/Images/SurrenderButtonSmall.png");
 	SurrenderButton->setScaledContents(true);
 	SurrenderButton->setPixmap(SurrenderButtonPixMap);
 
+	// Create clickable split button
 	SplitButton = new ClickableLabel(this);
-	SplitButton->setGeometry(365*XScalingFactor, 446*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
+	SplitButton->setGeometry(365*XScale, 446*YScale, 100*XScale, 37*YScale);
 	QPixmap SplitButtonPixMap(":/Images/SplitButtonSmall.png");
 	SplitButton->setScaledContents(true);
 	SplitButton->setPixmap(SplitButtonPixMap);
 
+	// Create clickable double button
 	DoubleButton = new ClickableLabel(this);
-	DoubleButton->setGeometry(375*XScalingFactor, 478*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
+	DoubleButton->setGeometry(375*XScale, 478*YScale, 100*XScale, 37*YScale);
 	QPixmap DoubleButtonPixMap(":/Images/DoubleButtonSmall.png");
 	DoubleButton->setScaledContents(true);
 	DoubleButton->setPixmap(DoubleButtonPixMap);
@@ -298,125 +310,147 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 //###################### About Box ##########################
 
 	AboutBox = new QWidget;
-	AboutBox->setGeometry(50, 300, 525, 155);
+	AboutBox->setGeometry(50, 580, 525, 155);
+	AboutBox->setFixedWidth(580);
 	AboutBox->setWindowTitle("About Blackjack");
+	AboutBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
 	QPixmap AboutBoxPixMap("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/JimboFace.gif");
 	AboutBoxPixMap = AboutBoxPixMap.scaled(100, 100);
-
-    QVBoxLayout *AboutLayout = new QVBoxLayout(AboutBox);
-    QHBoxLayout *TextLayout = new QHBoxLayout();
-    QHBoxLayout *ButtonLayout = new QHBoxLayout();
 
 	labelAboutPicture = new QLabel(AboutBox);
 	labelAboutPicture->setPixmap(AboutBoxPixMap);
 	labelAboutPicture->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
 	labelAbout = new QLabel(AboutBox);
-	labelAbout->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	labelAbout->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
 	labelAbout->setWordWrap(true);
 	labelAbout->setScaledContents(true);
+	labelAbout->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
+	labelAbout->setOpenExternalLinks(true);
 
 	OKButton = new QPushButton("&OK", AboutBox);
-	LicenceButton = new QPushButton("&License", AboutBox);
+	OKButton->setDefault(true);
+	LicenceButton = new QPushButton("&Licence", AboutBox);
 	CreditsButton = new QPushButton("&Credits", AboutBox);
+	AboutButton = new QPushButton("&About", AboutBox);
+
+	LicenceButton->setFocusPolicy(Qt::NoFocus);
+	CreditsButton->setFocusPolicy(Qt::NoFocus);
+	AboutButton->setFocusPolicy(Qt::NoFocus);
 
 	AboutBoxMapper = new QSignalMapper();
 	connect(OKButton, SIGNAL(clicked()), AboutBox, SLOT(hide()));
 	connect(LicenceButton, SIGNAL(clicked()), AboutBoxMapper, SLOT(map()));
 	connect(CreditsButton, SIGNAL(clicked()), AboutBoxMapper, SLOT(map()));
+	connect(AboutButton, SIGNAL(clicked()), AboutBoxMapper, SLOT(map()));
 	AboutBoxMapper->setMapping(LicenceButton, 2);
 	AboutBoxMapper->setMapping(CreditsButton, 3);
+	AboutBoxMapper->setMapping(AboutButton, 1);
 	connect(AboutBoxMapper, SIGNAL(mapped(int)), this, SLOT(ChangeAboutBoxText(int)));
 
-	OKButton->setDefault(true);
+    QVBoxLayout *PicLayout = new QVBoxLayout();
+	PicLayout->addWidget(labelAboutPicture);
+	//PicLayout->addWidget(labelAboutPicture);
+	QSpacerItem* VerticalSpacer = new QSpacerItem(0, 550, QSizePolicy::Minimum, QSizePolicy::Expanding);
+	PicLayout->addItem(VerticalSpacer);
 
-	TextLayout->addWidget(labelAboutPicture);
+    QHBoxLayout *TextLayout = new QHBoxLayout();
+    QHBoxLayout *ButtonLayout = new QHBoxLayout();
+    QVBoxLayout *AboutLayout = new QVBoxLayout(AboutBox);
+
+	TextLayout->addLayout(PicLayout);
 	TextLayout->addWidget(labelAbout);
+
 
 	ButtonLayout->addWidget(LicenceButton);
 	ButtonLayout->addWidget(CreditsButton);
+	ButtonLayout->addWidget(AboutButton);
 	ButtonLayout->addWidget(OKButton);
 
 	AboutLayout->addLayout(TextLayout);
 	AboutLayout->addLayout(ButtonLayout);
 
 	ChangeAboutBoxText(1);
+	AboutButton->hide();
 
 	AboutBox->setLayout(AboutLayout);
-	//AboutBox->setFixedSize(AboutBox->size());
 	AboutBox->setWindowFlags(Qt::Dialog);
 
 //###########################################################
 
-//##### func
-
-	BettingPile->raise();
-
 	myThread = new GameThread();
 
-	connect(myThread, SIGNAL(updatePlayersHand(QString,int)), this, SLOT(UpdatePlayersHand(QString,int)));
-	connect(myThread, SIGNAL(updateDealersHand(QString,int)), this, SLOT(UpdateDealersHand(QString,int)));
-	connect(myThread, SIGNAL(updateDealersHandValue(QString)), this, SLOT(UpdateDealersHandValue(QString)));
-	connect(myThread, SIGNAL(updatePlayersHandValue(QString)), this, SLOT(UpdatePlayersHandValue(QString)));
-	connect(myThread, SIGNAL(updateStack(QString)), this, SLOT(UpdateStackValue(QString)));
-	connect(myThread, SIGNAL(updateBet(QString)), this, SLOT(UpdateBetValue(QString)));
-	connect(myThread, SIGNAL(clearPlayersHand()), this, SLOT(ClearPlayersHand()));
-	connect(myThread, SIGNAL(clearDealersHand()), this, SLOT(ClearDealersHand()));
-	connect(myThread, SIGNAL(Clearchips()), this, SLOT(HideHandValueSpots()));
-	connect(myThread, SIGNAL(ButtonVisibility(bool, bool, bool, bool, bool, bool, bool, bool)), this, SLOT(HideButtons(bool, bool, bool, bool, bool, bool, bool, bool)));
-	connect(myThread, SIGNAL(ResultTextVisibility(bool, bool, bool, bool)), this, SLOT(ResultText(bool, bool, bool, bool)));
-	connect(myThread, SIGNAL(updateStatus(QString)), this, SLOT(UpdateGameStatus(QString)));
-	connect(myThread, SIGNAL(updateResultsSummary(QString)), this, SLOT(UpdateResultsSummary(QString)));
-	connect(myThread, SIGNAL(DisableChips(bool)), this, SLOT(DisableChips(bool)));
-	connect(myThread, SIGNAL(GameOver()), this, SLOT(PositionYesNo()));
+	// Connect game thread signals to the GUI slots
+
+	// Updates during play
+	connect(myThread, SIGNAL(UpdatePlayersHand(QString,int)), this, SLOT(UpdatePlayersHand(QString,int)));
+	connect(myThread, SIGNAL(UpdateDealersHand(QString,int)), this, SLOT(UpdateDealersHand(QString,int)));
+	connect(myThread, SIGNAL(UpdatePlayersHandValue(QString)), this, SLOT(UpdatePlayersHandValue(QString)));
+	connect(myThread, SIGNAL(UpdateDealersHandValue(QString)), this, SLOT(UpdateDealersHandValue(QString)));
+	connect(myThread, SIGNAL(UpdateStackValue(QString)), this, SLOT(UpdateStackValue(QString)));
+	connect(myThread, SIGNAL(UpdateBetValue(QString)), this, SLOT(UpdateBetValue(QString)));
+	connect(myThread, SIGNAL(UpdateGameStatus(QString)), this, SLOT(UpdateGameStatus(QString)));
+	connect(myThread, SIGNAL(UpdateResultsSummary(QString)), this, SLOT(UpdateResultsSummary(QString)));
+	connect(myThread, SIGNAL(EnableChips(bool)), this, SLOT(EnableChips(bool)));
+	// Sound Effects
 	connect(myThread, SIGNAL(PlayWinSound()), this, SLOT(PlayWinSound()));
 	connect(myThread, SIGNAL(PlayLoseSound()), this, SLOT(PlayLoseSound()));
+	// Tidying up after play
+	connect(myThread, SIGNAL(ClearPlayersHand()), this, SLOT(ClearPlayersHand()));
+	connect(myThread, SIGNAL(ClearDealersHand()), this, SLOT(ClearDealersHand()));
+	connect(myThread, SIGNAL(ClearChips()), this, SLOT(HideHandValues()));
+	// Detect game thread has finished
+	connect(myThread, SIGNAL(finished()), this, SLOT(HandleEndGame()));
 
-	connect(BettingPile, SIGNAL(AddToBet(float)), myThread, SIGNAL(IncreaseBet(float)));
-	connect(BettingPile, SIGNAL(RemoveFromBet(float)), myThread, SIGNAL(DecreaseBet(float)));
-	connect(BettingPile, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
 
+	connect(myThread, SIGNAL(ButtonVisibility(bool, bool, bool, bool, bool, bool, bool, bool)), this, SLOT(HideButtons(bool, bool, bool, bool, bool, bool, bool, bool)));
+	connect(myThread, SIGNAL(ResultTextVisibility(bool, bool, bool, bool)), this, SLOT(ResultText(bool, bool, bool, bool)));
+
+	// Connect game thread signal to a chip object slot
+	connect(myThread, SIGNAL(ClearChips()), BettingPile, SLOT(ClearChips()));
+
+	// Connect chip object signals to the GUI slots
 	connect(FivePile, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
 	connect(TenPile, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
 	connect(TwentyFivePile, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
 	connect(FiftyPile, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
 	connect(HundredPile, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
+	connect(BettingPile, SIGNAL(PlayChipSound()), this, SLOT(PlayChipSound()));
 
-	connect(myThread, SIGNAL(Clearchips()), BettingPile, SLOT(ClearChips()));
+	// Connect chip object signals to the thread slots
+	connect(BettingPile, SIGNAL(IncreaseBet(float)), myThread, SIGNAL(IncreaseBet(float)));
+	connect(BettingPile, SIGNAL(DecreaseBet(float)), myThread, SIGNAL(DecreaseBet(float)));
 
-	// #1
+	// Create new signal mapper object for the buttons
+	ButtonMapping = new QSignalMapper();
 
-	m_sigmapper = new QSignalMapper();
-
-	// #2
-
-	connect(HitButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
-	connect(StandButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
-	connect(DoubleButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
-	connect(SplitButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
-	connect(SurrenderButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
-	connect(YesButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
-	connect(NoButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
-
+	// Connect button presses to the signal map...
+	connect(HitButton, SIGNAL(clicked()), ButtonMapping, SLOT(map()));
+	connect(StandButton, SIGNAL(clicked()), ButtonMapping, SLOT(map()));
+	connect(DoubleButton, SIGNAL(clicked()), ButtonMapping, SLOT(map()));
+	connect(SplitButton, SIGNAL(clicked()), ButtonMapping, SLOT(map()));
+	connect(SurrenderButton, SIGNAL(clicked()), ButtonMapping, SLOT(map()));
+	connect(YesButton, SIGNAL(clicked()), ButtonMapping, SLOT(map()));
+	connect(NoButton, SIGNAL(clicked()), ButtonMapping, SLOT(map()));
+	// ...including the New Game menu item, but not including...
+	connect(NewGame, SIGNAL(triggered()), ButtonMapping, SLOT(map()));
+	// ...the done button which is linked to bet completion signal
 	connect(DoneButton, SIGNAL(clicked()), myThread, SIGNAL(BetDone()));
-/////////////////////////
-	connect(NewGame, SIGNAL(triggered()), m_sigmapper, SLOT(map()));
-////////////////////////
 
-	// #3
-	m_sigmapper->setMapping(HitButton, 1);
-	m_sigmapper->setMapping(StandButton, 2);
-	m_sigmapper->setMapping(DoubleButton, 3);
-	m_sigmapper->setMapping(SplitButton, 4);
-	m_sigmapper->setMapping(SurrenderButton, 5);
-	m_sigmapper->setMapping(YesButton, 6);
-	m_sigmapper->setMapping(NoButton, 7);
-	m_sigmapper->setMapping(NewGame, 8);
+	// Give each button a unique ID
+	ButtonMapping->setMapping(HitButton, 1);
+	ButtonMapping->setMapping(StandButton, 2);
+	ButtonMapping->setMapping(DoubleButton, 3);
+	ButtonMapping->setMapping(SplitButton, 4);
+	ButtonMapping->setMapping(SurrenderButton, 5);
+	ButtonMapping->setMapping(YesButton, 6);
+	ButtonMapping->setMapping(NoButton, 7);
+	ButtonMapping->setMapping(NewGame, 8);
 
-	// #4
-	connect(m_sigmapper, SIGNAL(mapped(int)), myThread, SLOT(ChoiceMade(int)));
-	connect(myThread, SIGNAL(finished()), this, SLOT(PositionYesNo()));
+	// Connect the signal map to the game thread
+	connect(ButtonMapping, SIGNAL(mapped(int)), myThread, SLOT(ChoiceMade(int)));
+
 	
 	MakeConnections();
 }
@@ -424,7 +458,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 MainWindow::~MainWindow()
 {
 	//delete myThread;
-    delete ui;
+    //delete ui;
 }
 
 void MainWindow::MakeConnections()
@@ -433,12 +467,12 @@ void MainWindow::MakeConnections()
 	UpdateStackValue("100");
 	disconnect(YesButton, SIGNAL(clicked()), this, SLOT(MakeConnections()));
 	disconnect(NoButton, SIGNAL(clicked()), qApp, SLOT(quit()));
-	connect(YesButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
-	connect(NoButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
+	connect(YesButton, SIGNAL(clicked()), ButtonMapping, SLOT(map()));
+	connect(NoButton, SIGNAL(clicked()), ButtonMapping, SLOT(map()));
 	myThread->start();
 }
 
-void MainWindow::DisableChips(bool ActiveState)
+void MainWindow::EnableChips(bool ActiveState)
 {
 	FivePile->setInactive(ActiveState);
 	TenPile->setInactive(ActiveState);
@@ -448,7 +482,8 @@ void MainWindow::DisableChips(bool ActiveState)
 	BettingPile->setInactive(ActiveState);
 }
 
-void MainWindow::HideHandValueSpots()
+// Hide all hand values and their associated graphics
+void MainWindow::HideHandValues()
 {
 	labelHandValueSpot->setVisible(false);
 	labelDealersHandValueSpot->setVisible(false);
@@ -460,41 +495,42 @@ void MainWindow::ChangeAboutBoxText(int TextSet)
 {
 	LicenceButton->show();
 	CreditsButton->show();
-
-	disconnect(OKButton, SIGNAL(clicked()), AboutBox, SLOT(hide()));
-	connect(OKButton, SIGNAL(clicked()), AboutBoxMapper, SLOT(map()));
-	AboutBoxMapper->setMapping(OKButton, 1);
+	AboutButton->show();
+	QPixmap LicencePixMap("/home/jimbo/Dropbox/QtProjects/BlackJackVersionCtrl/GPLV3.png");
+	LicencePixMap = LicencePixMap.scaled(127, 51);	
 
 	switch (TextSet)
 	{
 		case 1:
-			AboutBoxText = "<b><i><font size = 4>Blackjack</i></b><br>Another JimboMonkey Production<br>Version 1.0<br><br>Copyright \x00A9 2014 JimboMonkey Productions";
-			disconnect(OKButton, SIGNAL(clicked()), AboutBoxMapper, SLOT(map()));
-			connect(OKButton, SIGNAL(clicked()), AboutBox, SLOT(hide()));
+			AboutBoxText = "<b><i><font size = 4>Blackjack</i></b><br>Another JimboMonkey Production<br>Version 1.0<br><br>Copyright \x00A9 2014 JimboMonkey Productions<br>";
+			AboutButton->hide();
 			break;
 		case 2:
-			AboutBoxText = "<b><i><font size = 4>License</i></b><br>Copyright 2014 James O'Hea<br><br>Blackjack is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br><br>Blackjack is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br><br> You should have received a copy of the GNU General Public License along with Blackjack.  If not, see <http://www.gnu.org/licenses/>.<br><br>";
-			LicenceButton->hide();
-			AboutBox->adjustSize();
+			AboutBoxText = "<b><i><font size = 4>Licence</i></b><br>Copyright 2014 James O'Hea<br><br>Blackjack is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br><br>Blackjack is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br><br> You should have received a copy of the GNU General Public License along with Blackjack.  If not, see <a href=\"http://www.gnu.org/licenses\">http://www.gnu.org/licenses</a><br>";
+			labelAboutPicture->setPixmap(LicencePixMap);
+			LicenceButton->hide();	
 			break;
 		case 3:
-			AboutBoxText = "<b><i><font size = 4>Credits</i></b><br>Credits blurbbb<br>vlaaahh<br><br>";
+			AboutBoxText = "<b><i><font size = 4>Credits</i></b><br><br><b>Sounds</b><br><br>All sounds are from <a href=\"http://www.freesound.org\">http://www.freesound.org</a><br>Drawing Cards is draw-card2 by themfish<br>Bust is broken_bottle_01 by cdrk<br>Chip Sounds are Ceramic Chips by ArtOrDie<br>Win is Till With Bell by Benboncan<br>Gasp is Gasp-03 by EBrown15<br>Lose is kung fu punch by nextmaking<br>Yeah is yeah by totya<br><br><b>Graphics</b><br><br>Icon by tango from http://openiconlibrary.sourceforge.net<br>Cards by nicubunu from openclipart.org<br>All graphics made by JimboMonkey following tutorials by BlueLightningTV, tutorial9<br><br><b>Code</b><br><br>All code by JimboMonkey<br>";
 			CreditsButton->hide();
 			break;
 	}
+
 	labelAbout->setText(AboutBoxText);		
+	QSize mysize = labelAbout->sizeHint();
+	AboutBox->setFixedHeight(mysize.height() + 60);
 }
 
-void MainWindow::PositionYesNo()
+void MainWindow::HandleEndGame()
 {
 	if(labelGameStatus->text() == "Game Over")
 	{
-		disconnect(YesButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
-		disconnect(NoButton, SIGNAL(clicked()), m_sigmapper, SLOT(map()));
+		disconnect(YesButton, SIGNAL(clicked()), ButtonMapping, SLOT(map()));
+		disconnect(NoButton, SIGNAL(clicked()), ButtonMapping, SLOT(map()));
 		connect(YesButton, SIGNAL(clicked()), this, SLOT(MakeConnections()));
 		connect(NoButton, SIGNAL(clicked()), qApp, SLOT(quit()));
-		YesButton->setGeometry(200*XScalingFactor, 360*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
-		NoButton->setGeometry(320*XScalingFactor, 360*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
+		YesButton->setGeometry(200*XScale, 360*YScale, 100*XScale, 37*YScale);
+		NoButton->setGeometry(320*XScale, 360*YScale, 100*XScale, 37*YScale);
 		YesButton->setVisible(true);
 		NoButton->setVisible(true);
 		YesButton->raise();
@@ -508,23 +544,8 @@ void MainWindow::PositionYesNo()
 
 void MainWindow::DisplayAboutBox()
 {
-	QMessageBox msgBox;
-
-
-	QString labelText = "<b><i><font size = 4>Blackjack</i></b><br>Another JimboMonkey Production<br>Version 1.0<br><br>Copyright \x00A9 2014 JimboMonkey Productions";
-	QString licenseText = "<b><i><font size = 4>License</i></b><br>License blurbbb<br>vlaaahh";
-
-	msgBox.setWindowTitle("About Blackjack");
-	//msgBox.setIconPixmap(AboutBoxPixMap);
-	msgBox.setText(labelText);
-
-	QSpacerItem* horizontalSpacer = new QSpacerItem(500, 0, QSizePolicy::Minimum, QSizePolicy::Expanding);
-	QGridLayout* layout = (QGridLayout*)msgBox.layout();
-	layout->addItem(horizontalSpacer, layout->rowCount(), 0, 1, layout->columnCount());
-
+	ChangeAboutBoxText(1);
 	AboutBox->show();
-
-	//msgBox.exec();
 }
 
 void MainWindow::HideButtons(bool HitVisible, bool StandVisible, bool SurrenderVisible, bool DoubleVisible, bool SplitVisible, bool YesVisible, bool NoVisible, bool DoneVisible)
@@ -545,9 +566,6 @@ void MainWindow::HideButtons(bool HitVisible, bool StandVisible, bool SurrenderV
 	YesButton->raise();
 	NoButton->raise();
 	DoneButton->raise();
-
-
-//	BettingPile->raise();
 }
 
 // Display the appropriate 
@@ -568,17 +586,17 @@ void MainWindow::ResultText(bool BustVisible, bool DealerBustVisible, bool Black
 	{
 		if(BustVisible == true or DealerBustVisible == true)
 		{
-			media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Bust.mp3"));
+			SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Bust.mp3"));
 		}
 		else if(BlackjackVisible == true)
 		{
-			media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Yeah.mp3"));
+			SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Yeah.mp3"));
 		}
 		else if(DealerBlackjackVisible == true)
 		{
-			media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Gasp.mp3"));
+			SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Gasp.mp3"));
 		}
-		media->play();
+		SoundFX->play();
 	}
 }
 
@@ -594,36 +612,36 @@ void MainWindow::UpdatePlayersHand(QString LoadCardName, int CardPosition)
 	// ie not during the initial draw
 	if(CardPosition > 1)
 	{
-		media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/DrawCard.mp3"));
+		SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/DrawCard.mp3"));
 		// Only play if sound is enabled
 		if (ToggleSound->isChecked())
 		{
-			media->play();
+			SoundFX->play();
 		}
 	}
 
 	// Load the image for the given card into the given position (and scale if needed)
 	// New cards are raised to ensure all cards of hand are visible
-	PlayersHand[CardPosition]->setPixmap(QPixmap::fromImage(CardImage).scaledToWidth(161*XScalingFactor));
+	PlayersHand[CardPosition]->setPixmap(QPixmap::fromImage(CardImage).scaledToWidth(161*XScale));
 	PlayersHand[CardPosition]->show();
 	PlayersHand[CardPosition]->raise();
 	
 	// Adjust the overall hand position and value as cards are drawn to ensure the hand remains centered on the screen
 	NewHandPosition = 216 - ((CardPosition + 1) * 12);
-	PlayersCards->setGeometry(NewHandPosition*XScalingFactor, 310*YScalingFactor, 541*XScalingFactor, 331*YScalingFactor);
-	labelHandValueSpot->setGeometry((238 - (CardPosition + 1) * 12)*XScalingFactor, 470*YScalingFactor, 55*XScalingFactor, 55*YScalingFactor);
-	labelPlayersHandValue->setGeometry((210 - (CardPosition + 1) * 12)*XScalingFactor, 482*YScalingFactor, 111*XScalingFactor, 31*YScalingFactor);
+	PlayersCards->setGeometry(NewHandPosition*XScale, 310*YScale, 541*XScale, 331*YScale);
+	labelHandValueSpot->setGeometry((238 - (CardPosition + 1) * 12)*XScale, 470*YScale, 55*XScale, 55*YScale);
+	labelPlayersHandValue->setGeometry((210 - (CardPosition + 1) * 12)*XScale, 482*YScale, 111*XScale, 31*YScale);
 	labelHandValueSpot->raise();
 	labelPlayersHandValue->raise();
 
 	// Adjust all the button positions as well
-	HitButton->setGeometry((315 + (CardPosition + 1) * 10)*XScalingFactor, 350*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
-	YesButton->setGeometry((315 + (CardPosition + 1) * 10)*XScalingFactor, 350*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
-	StandButton->setGeometry((325 + (CardPosition + 1) * 10)*XScalingFactor, 382*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
-	NoButton->setGeometry((325 + (CardPosition + 1) * 10)*XScalingFactor, 382*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
-	SurrenderButton->setGeometry((335 + (CardPosition + 1) * 10)*XScalingFactor, 414*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
-	SplitButton->setGeometry((345 + (CardPosition + 1) * 10)*XScalingFactor, 446*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
-	DoubleButton->setGeometry((355 + (CardPosition + 1) * 10)*XScalingFactor, 478*YScalingFactor, 100*XScalingFactor, 37*YScalingFactor);
+	HitButton->setGeometry((315 + (CardPosition + 1) * 10)*XScale, 350*YScale, 100*XScale, 37*YScale);
+	YesButton->setGeometry((315 + (CardPosition + 1) * 10)*XScale, 350*YScale, 100*XScale, 37*YScale);
+	StandButton->setGeometry((325 + (CardPosition + 1) * 10)*XScale, 382*YScale, 100*XScale, 37*YScale);
+	NoButton->setGeometry((325 + (CardPosition + 1) * 10)*XScale, 382*YScale, 100*XScale, 37*YScale);
+	SurrenderButton->setGeometry((335 + (CardPosition + 1) * 10)*XScale, 414*YScale, 100*XScale, 37*YScale);
+	SplitButton->setGeometry((345 + (CardPosition + 1) * 10)*XScale, 446*YScale, 100*XScale, 37*YScale);
+	DoubleButton->setGeometry((355 + (CardPosition + 1) * 10)*XScale, 478*YScale, 100*XScale, 37*YScale);
 }
 
 // Add a card to the dealer's hand.  Adjust the hand position to keep it central
@@ -638,25 +656,25 @@ void MainWindow::UpdateDealersHand(QString LoadCardName, int CardPosition)
 	// ie not during the initial draw
 	if(CardPosition > 0 and LoadCardName != "DealerCards/CardBack.png")
 	{
-		media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/DrawCard.mp3"));
+		SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/DrawCard.mp3"));
 		// Only play if sound is enabled
 		if (ToggleSound->isChecked())
 		{
-			media->play();
+			SoundFX->play();
 		}
 	}
 
 	// Load the image for the given card into the given position (and scale if needed)
 	// New cards are raised to ensure all cards of hand are visible
-	DealersHand[CardPosition]->setPixmap(QPixmap::fromImage(CardImage).scaledToWidth(94*XScalingFactor));
+	DealersHand[CardPosition]->setPixmap(QPixmap::fromImage(CardImage).scaledToWidth(94*XScale));
 	DealersHand[CardPosition]->show();
 	DealersHand[CardPosition]->raise();
 
 	// Adjust the overall hand position and value as cards are drawn to ensure the hand remains centered on the screen
 	NewHandPosition = 250 - ((CardPosition + 1) * 10);
-	DealersCards->setGeometry(NewHandPosition*XScalingFactor, 50*YScalingFactor, 541*XScalingFactor, 331*YScalingFactor);
-	labelDealersHandValueSpot->setGeometry((265 - (CardPosition + 1) * 10)*XScalingFactor, 170*YScalingFactor, 55*XScalingFactor, 55*YScalingFactor);
-	labelDealersHandValue->setGeometry((235 - (CardPosition + 1) * 10)*XScalingFactor, 181*YScalingFactor, 111*XScalingFactor, 31*YScalingFactor);
+	DealersCards->setGeometry(NewHandPosition*XScale, 50*YScale, 541*XScale, 331*YScale);
+	labelDealersHandValueSpot->setGeometry((265 - (CardPosition + 1) * 10)*XScale, 170*YScale, 55*XScale, 55*YScale);
+	labelDealersHandValue->setGeometry((235 - (CardPosition + 1) * 10)*XScale, 181*YScale, 111*XScale, 31*YScale);
 	labelDealersHandValueSpot->raise();
 	labelDealersHandValue->raise();
 }
@@ -667,8 +685,8 @@ void MainWindow::PlayWinSound()
 	// Only play if sound is enabled
 	if (ToggleSound->isChecked())
 	{
-		media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Ching.mp3"));
-		media->play();
+		SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Ching.mp3"));
+		SoundFX->play();
 	}
 }
 
@@ -678,8 +696,8 @@ void MainWindow::PlayLoseSound()
 	// Only play if sound is enabled
 	if (ToggleSound->isChecked())
 	{
-		media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Punch.mp3"));
-		media->play();
+		SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Punch.mp3"));
+		SoundFX->play();
 	}
 }
 
@@ -701,17 +719,17 @@ void MainWindow::PlayChipSound()
 		switch (RandomNumber)
 		{
 			case 1:
-				media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip.mp3"));
+				SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip.mp3"));
 				break;
 			case 2:
-				media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip2.mp3"));
+				SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip2.mp3"));
 				break;
 			case 3:
-				media->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip3.mp3"));
+				SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip3.mp3"));
 				break;
 		}
 		// Play the selected sound
-		media->play();
+		SoundFX->play();
 	}	
 }
 
