@@ -18,7 +18,7 @@ SOURCES += main.cpp\
 		Participant.cpp\
 		Box.cpp \
 		GameThread.cpp\
-		dragwidget.cpp\
+		ChipPile.cpp\
 		Chip.cpp\
 		ClickableLabel.cpp
 
@@ -30,7 +30,7 @@ HEADERS  += mainwindow.h\
 			Participant.hpp\
 			Box.hpp\
 			GameThread.hpp\
-			dragwidget.h\
+			ChipPile.hpp\
 			Chip.h\
 			ClickableLabel.hpp
 
