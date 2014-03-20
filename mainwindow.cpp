@@ -497,21 +497,29 @@ void MainWindow::ChangeAboutBoxText(int TextSet)
 	CreditsButton->show();
 	AboutButton->show();
 	QPixmap LicencePixMap("/home/jimbo/Dropbox/QtProjects/BlackJackVersionCtrl/GPLV3.png");
-	LicencePixMap = LicencePixMap.scaled(127, 51);	
+	LicencePixMap = LicencePixMap.scaled(127, 51);
+
+	QPixmap AboutPixMap("/home/jimbo/Dropbox/QtProjects/BlackJackVersionCtrl/cards_med.png");
+	AboutPixMap = AboutPixMap.scaled(100, 100);	
+
+	QPixmap CreditsPixMap("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/JimboFace.gif");
+	CreditsPixMap = CreditsPixMap.scaled(100, 100);		
 
 	switch (TextSet)
 	{
 		case 1:
-			AboutBoxText = "<b><i><font size = 4>Blackjack</i></b><br>Another JimboMonkey Production<br>Version 1.0<br><br>Copyright \x00A9 2014 JimboMonkey Productions<br>";
+			AboutBoxText = "<b><i><font size = 4>Blackjack</i></b><br><br>Another JimboMonkey Production<br>Version 1.0<br><br>Copyright \x00A9 2014 JimboMonkey Productions<br>";
+			labelAboutPicture->setPixmap(AboutPixMap);
 			AboutButton->hide();
 			break;
 		case 2:
-			AboutBoxText = "<b><i><font size = 4>Licence</i></b><br>Copyright 2014 James O'Hea<br><br>Blackjack is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br><br>Blackjack is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br><br> You should have received a copy of the GNU General Public License along with Blackjack.  If not, see <a href=\"http://www.gnu.org/licenses\">http://www.gnu.org/licenses</a><br>";
+			AboutBoxText = "<b><i><font size = 4>Licence</i></b><br><br>Copyright 2014 James O'Hea<br><br>Blackjack is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br><br>Blackjack is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br><br> You should have received a copy of the GNU General Public License along with Blackjack.  If not, see <a href=\"http://www.gnu.org/licenses\">http://www.gnu.org/licenses</a><br><br><p>";
 			labelAboutPicture->setPixmap(LicencePixMap);
 			LicenceButton->hide();	
 			break;
 		case 3:
-			AboutBoxText = "<b><i><font size = 4>Credits</i></b><br><br><b>Sounds</b><br><br>All sounds are from <a href=\"http://www.freesound.org\">http://www.freesound.org</a><br>Drawing Cards is draw-card2 by themfish<br>Bust is broken_bottle_01 by cdrk<br>Chip Sounds are Ceramic Chips by ArtOrDie<br>Win is Till With Bell by Benboncan<br>Gasp is Gasp-03 by EBrown15<br>Lose is kung fu punch by nextmaking<br>Yeah is yeah by totya<br><br><b>Graphics</b><br><br>Icon by tango from http://openiconlibrary.sourceforge.net<br>Cards by nicubunu from openclipart.org<br>All graphics made by JimboMonkey following tutorials by BlueLightningTV, tutorial9<br><br><b>Code</b><br><br>All code by JimboMonkey<br>";
+			AboutBoxText = "<b><i><font size = 4>Credits</i></b><br><br><b>Sounds</b><ul><li>All sounds are from <a href=\"http://www.freesound.org\">freesound.org:</a></li></ul><ul><li>Drawing Cards is 'draw-card2' by themfish</li><li>Bust is 'broken_bottle_01' by cdrk</li><li>Chip Sounds are 'Ceramic Chips' by ArtOrDie</li><li>Win is 'Till With Bell' by Benboncan</li><li>Gasp is 'Gasp-03' by EBrown15</li><li>Lose is 'kung fu punch' by nextmaking</li><li>Yeah is 'yeah' by totya</li></ul><b>Graphics</b><ul><li>Icon by tango from <a href=\"http://openiconlibrary.sourceforge.net\">openiconlibrary.sourceforge.net</a></li><li>Cards by nicubunu from <a href=\"http://www.openclipart.org\">openclipart.org</a></li><li>All other graphics made by JimboMonkey</li><li>Chips, graphical text, and the table logo relied on tutorials by <a href=\"http://www.youtube.com/user/bluelightningtv\">BlueLightningTV</a>, and <a href=\"http://www.tutorial9.net>tutorial9\">Tutorial9</a></li></ul><b>Code</b><ul><li>All code by JimboMonkey<//li></ul><br>";
+			labelAboutPicture->setPixmap(CreditsPixMap);
 			CreditsButton->hide();
 			break;
 	}
