@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-TARGET = Example
+TARGET = blackjack
 TEMPLATE = app
 
 DEFINES += QT_NO_DEBUG_OUTPUT
@@ -33,8 +33,6 @@ HEADERS  += mainwindow.h\
 			ChipPile.hpp\
 			Chip.h\
 			ClickableLabel.hpp
-
-#FORMS    += mainwindow.ui
 
 QT += phonon
 
