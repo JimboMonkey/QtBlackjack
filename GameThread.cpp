@@ -1,5 +1,4 @@
 
-#include <iostream>
 #include <vector>
 #include <sstream>
 #include <unistd.h>
@@ -10,19 +9,24 @@ using namespace std;
 
 #define MinimumBet 5
 
+// Thread constructor
 GameThread::GameThread()
 {
 }
 
+// Thread destructor
 GameThread::~GameThread()
 {
 	qDebug() << "arghhh you've destroyed me!" << endl;
 }
 
+// Custom sleep function which can 
+// be interupted by a New Game request
 void GameThread::MySleep(int Seconds)
 {
 	for(int i = 0; i < (Seconds * 100); i++)
 	{
+		// Check for a new game request every 10ms
 		if(CheckChoice() == 8)
 		{
 			break;
@@ -34,12 +38,7 @@ void GameThread::MySleep(int Seconds)
 	}
 }
 
-/* Use ANSI escape codes to clear the screen */
-void GameThread::ClearScreen()
-{
-	cout << "\033[2J\033[2;1H";
-}
-
+// Create a new box and assign it its connections
 Box* GameThread::NewBox(Player* pPlayer, bool Split)
 {
 	Box *pBox;
@@ -55,20 +54,21 @@ Box* GameThread::NewBox(Player* pPlayer, bool Split)
 	return pBox;
 }
 
-/* Create a box for every player at the table */
+// Create a box for every player at the table
+// Structure from multiplayer version
 void GameThread::SeatPlayers(Table& BlackJackTable)
 {
 	Box *pBox;
 	Player *pPlayer;
 
-	/* Create a player object to link to each box */
+	// Create a player object to link to each box
 	pPlayer = new Player();
 	connect(pPlayer, SIGNAL(updateStack(QString)), this, SIGNAL(UpdateStackValue(QString)));
 	pBox = NewBox(pPlayer, false);
 	BlackJackTable.AddBox(pBox, 0);
 }
 
-/* Collect bets from every player */
+// Collect bets from every player
 void GameThread::CollectBets(Table& BlackJackTable)
 {
 	QEventLoop eventLoop;
@@ -79,12 +79,13 @@ void GameThread::CollectBets(Table& BlackJackTable)
 
 	emit ButtonVisibility(false, false, false, false, false, false, false, false);
 	emit UpdateGameStatus("Place your bet");
+	// Only allow chip movement during betting period
 	emit EnableChips(true);	
 	eventLoop.exec();
 	emit EnableChips(false);
 }
 
-/* Deal everyone their first two cards (including the dealer) */
+// Deal everyone their first two cards (including the dealer)
 void GameThread::InitialDeal(Table& BlackJackTable, Croupier& Dealer)
 {
 	int Deal;
@@ -101,7 +102,7 @@ void GameThread::InitialDeal(Table& BlackJackTable, Croupier& Dealer)
 	}
 }
 
-/* Check for player blackjack and state any insurance options */
+// Check for player blackjack and state any insurance options
 void GameThread::InsuranceOffers(Table& BlackJackTable, Croupier& Dealer)
 {
 	QEventLoop eventLoop;
@@ -109,7 +110,7 @@ void GameThread::InsuranceOffers(Table& BlackJackTable, Croupier& Dealer)
 
 	Box* CurrentBox = BlackJackTable.GetBox(0);
 		
-	/* Player has blackjack - display message */
+	// Player has blackjack - display message
 	if(CurrentBox->CheckHand() == 21)
 	{
 		// Display dealers cards - one face up, one face down
@@ -125,17 +126,17 @@ void GameThread::InsuranceOffers(Table& BlackJackTable, Croupier& Dealer)
 		emit ResultTextVisibility(false, false, false, false);
 	}
 				
-	/* If dealer has an ace as their upcard, and they have enough money, offer insurance */
+	// If dealer has an ace as their upcard, and they have enough money, offer insurance
 	if (Dealer.CheckCard(0) == "Ace" and (CurrentBox->CountStack() >= (CurrentBox->CountBet() / 2)))
 	{
-		/* If the player has blackjack their status will already be displayed */
+		// If the player has blackjack their status will already be displayed
 		if(CurrentBox->CheckHand() != 21)
 		{
 			Dealer.InitialStatus();
 			CurrentBox->Status();
 		}
 
-		/* Hands of blackjack receive different message for same offer */
+		// Hands of blackjack receive different message for same offer
 		if (CurrentBox->CheckHand() == 21)
 		{
 			emit UpdateGameStatus("The dealer is showing an ace\nEven money?");
@@ -704,7 +705,7 @@ void GameThread::SettleBets(Table& BlackJackTable, Croupier& Dealer)
 
 		QString qstr = QString::fromStdString(ResultsSummary);
 		UpdateResultsSummary(qstr);
-		MySleep(4.0);
+		MySleep(3.0);
 		if(CheckChoice() == 8)
 		{
 			return; 

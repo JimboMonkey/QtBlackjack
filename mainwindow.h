@@ -5,14 +5,11 @@
 // Qt includes
 #include <QMainWindow>
 #include <QGroupBox>
-#include <QMessageBox>
 #include <QThread>
 #include <QLabel>
 
 #include <QtGui>
 
-#include "Table.hpp"
-#include "Croupier.hpp"
 #include "GameThread.hpp"
 
 #include "ClickableLabel.hpp"
@@ -21,11 +18,6 @@
 #include <phonon/audiooutput.h>
 #include <phonon/mediaobject.h>
 
-namespace Ui 
-{
-    class MainWindow;
-}
-
 class MainWindow: public QMainWindow 
 {
     Q_OBJECT
@@ -33,27 +25,20 @@ class MainWindow: public QMainWindow
 	public:
 	    MainWindow(QWidget *parent = 0);
 	    ~MainWindow();
-		void InitialDeal();
-		void InsuranceOffers();
-		void ClearScreen();
-		void CollectBets();
 		GameThread *myThread;
 		float XScale;
 		float YScale;
 	
 	private:
-	    Ui::MainWindow *ui;
-	//	Table BlackJackTable;
-	//	Croupier Dealer;
-		QLabel* array[11];
+		// Grouping hands of cards
+		QGroupBox* PlayersCards;
+		QGroupBox* DealersCards;
+
+		// Array of card placeholders
 		QLabel* DealersHand[12];
 		QLabel* PlayersHand[12];
-		int PlayersCardsHeld;
-		int DealersCardsHeld;
-		int HandValue;
-		QString Dealers2ndCard;
-//		GameThread *myThread; // this is our thread
-//		GameThread myThread;
+
+		// Custom widgets for clickable buttons
 		ClickableLabel *HitButton;
 		ClickableLabel *StandButton;
 		ClickableLabel *SplitButton;
@@ -62,6 +47,11 @@ class MainWindow: public QMainWindow
 		ClickableLabel *YesButton; 
 		ClickableLabel *NoButton; 
 		ClickableLabel *DoneButton; 
+
+		// Mapping button functions
+	    QSignalMapper *ButtonMapping;
+
+		// Custom widget for piles of chips
 		ChipPile *FivePile;
 		ChipPile *TenPile;
 		ChipPile *TwentyFivePile;
@@ -69,6 +59,7 @@ class MainWindow: public QMainWindow
 		ChipPile *HundredPile;
 		ChipPile *BettingPile;
 
+		// Graphic elements
 		QLabel* labelBetValue;
 		QLabel* labelStackValue;
 		QLabel* labelGameStatus;
@@ -86,6 +77,13 @@ class MainWindow: public QMainWindow
 		QLabel* labelResultsBubble;
 		QLabel* labelStatusBubble;
 
+		// Menu actions
+		QAction *NewGame;
+		QAction *ToggleSound;
+		QAction *About;
+		QAction *Quit;
+
+		// About Box elements
 		QSignalMapper *AboutBoxMapper;
 		QWidget *AboutBox;
 	    QVBoxLayout *AboutLayout;
@@ -100,27 +98,8 @@ class MainWindow: public QMainWindow
 		QPushButton *CreditsButton;
 		QPushButton *AboutButton;
 
-		QAction *NewGame;
-		QAction *ToggleSound;
-		QAction *About;
-		QAction *Quit;
-
-		void createActions();
-		void createMenus();
-		
-		QMenu *fileMenu;
-		QActionGroup *alignmentGroup;
-		QAction *NewGameAction;
-		QAction *AboutAction;
-		QAction *ToggleSoundAction;
-		QAction *ExitAction;
-
+		// Sound FX object
 		Phonon::MediaObject* SoundFX;
-
-		QGroupBox* PlayersCards;
-		QGroupBox* DealersCards;
-
-	    QSignalMapper *ButtonMapping;
 
 	private slots:
 		void UpdateDealersHand(QString LoadCardName, int CardPosition);
@@ -144,10 +123,6 @@ class MainWindow: public QMainWindow
 		void DisplayAboutBox();
 		void MakeConnections();
 		void ChangeAboutBoxText(int TextSet);
-
-	signals:
-		void threadStop();	
-
 };
 
 #endif

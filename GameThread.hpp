@@ -1,5 +1,5 @@
-/*#ifndef THREAD_H
-#define MYTHREAD_H*/
+#ifndef GAMETHREAD_H
+#define GAMETHREAD_H
 
 #include <QtGui>
 
@@ -15,9 +15,7 @@ class GameThread: public QThread
 		GameThread();
 		~GameThread();
 		void run(); // this is virtual method, we must implement it in our subclass of QThread
-		void ClearScreen();
 		void MySleep(int Seconds);
-		int CountPlayers();
 		void SeatPlayers(Table& BlackJackTable);
 		void CollectBets(Table& BlackJackTable);
 		void InitialDeal(Table& BlackJackTable, Croupier& Dealer);
@@ -37,14 +35,12 @@ class GameThread: public QThread
 
 	private:
 		int ButtonChoice;
-		int myBetValue;
 
 	private slots:
 		void ChoiceMade(int ButtonIndex);
 		void ReturnBet(int);
 	
 	signals:
-		void updateFromThread(QString);	
 		void ClearPlayersHand();
 		void ClearDealersHand();
 		void UpdateDealersHand(QString, int);
@@ -55,8 +51,6 @@ class GameThread: public QThread
 		void UpdateBetValue(QString);
 		void IncreaseBet(float);
 		void DecreaseBet(float);
-	//	void updatePlayersName(QString);
-		void updatePlayersStack(QString);
 		void UpdateGameStatus(QString);
 		void Choice();
 		void BetDone();
@@ -69,4 +63,4 @@ class GameThread: public QThread
 		void PlayLoseSound();
 };
 
-//#endif
+#endif

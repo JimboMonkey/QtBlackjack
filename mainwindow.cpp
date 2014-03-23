@@ -307,19 +307,18 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 	DoubleButton->setScaledContents(true);
 	DoubleButton->setPixmap(DoubleButtonPixMap);
 
-//###################### About Box ##########################
-
+	// Set up the About Box
 	AboutBox = new QWidget;
 	AboutBox->setGeometry(50, 580, 525, 155);
 	AboutBox->setFixedWidth(580);
 	AboutBox->setWindowTitle("About Blackjack");
 	AboutBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
-	QPixmap AboutBoxPixMap(":/Images/JimboFace.gif");
-	AboutBoxPixMap = AboutBoxPixMap.scaled(100, 100);
+//	QPixmap AboutBoxPixMap(":/Images/JimboFace.gif");
+//	AboutBoxPixMap = AboutBoxPixMap.scaled(100, 100);
 
 	labelAboutPicture = new QLabel(AboutBox);
-	labelAboutPicture->setPixmap(AboutBoxPixMap);
+//	labelAboutPicture->setPixmap(AboutBoxPixMap);
 	labelAboutPicture->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
 	labelAbout = new QLabel(AboutBox);
@@ -351,7 +350,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
     QVBoxLayout *PicLayout = new QVBoxLayout();
 	PicLayout->addWidget(labelAboutPicture);
-	//PicLayout->addWidget(labelAboutPicture);
 	QSpacerItem* VerticalSpacer = new QSpacerItem(0, 550, QSizePolicy::Minimum, QSizePolicy::Expanding);
 	PicLayout->addItem(VerticalSpacer);
 
@@ -377,8 +375,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 	AboutBox->setLayout(AboutLayout);
 	AboutBox->setWindowFlags(Qt::Dialog);
 
-//###########################################################
-
+	// Create a new game thread
 	myThread = new GameThread();
 
 	// Connect game thread signals to the GUI slots
@@ -451,26 +448,32 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 	// Connect the signal map to the game thread
 	connect(ButtonMapping, SIGNAL(mapped(int)), myThread, SLOT(ChoiceMade(int)));
 
+	// Initiate a new game
 	MakeConnections();
 }
 
+// Destructor
 MainWindow::~MainWindow()
 {
-	//delete myThread;
-    //delete ui;
+	delete myThread;
 }
 
+// Initiate a new game
 void MainWindow::MakeConnections()
 {
+	// Clear the text and reset the stack
 	UpdateResultsSummary("");
 	UpdateStackValue("100");
+	// Set yes/no buttons to work with insurance question again (for after game over)
 	disconnect(YesButton, SIGNAL(clicked()), this, SLOT(MakeConnections()));
 	disconnect(NoButton, SIGNAL(clicked()), qApp, SLOT(quit()));
 	connect(YesButton, SIGNAL(clicked()), ButtonMapping, SLOT(map()));
 	connect(NoButton, SIGNAL(clicked()), ButtonMapping, SLOT(map()));
+	// Start the game!
 	myThread->start();
 }
 
+// Enable or disable control of the chips
 void MainWindow::EnableChips(bool ActiveState)
 {
 	FivePile->setInactive(ActiveState);
@@ -496,6 +499,8 @@ void MainWindow::ChangeAboutBoxText(int TextSet)
 	LicenceButton->show();
 	CreditsButton->show();
 	AboutButton->show();
+
+	// Prepare different images for each option
 	QPixmap LicencePixMap(":/Images/GPLV3.png");
 	LicencePixMap = LicencePixMap.scaled(127, 51);
 
@@ -505,6 +510,7 @@ void MainWindow::ChangeAboutBoxText(int TextSet)
 	QPixmap CreditsPixMap(":/Images/JimboFace.gif");
 	CreditsPixMap = CreditsPixMap.scaled(100, 100);		
 
+	// Change the text and icon depending on button selection
 	switch (TextSet)
 	{
 		case 1:
@@ -524,19 +530,24 @@ void MainWindow::ChangeAboutBoxText(int TextSet)
 			break;
 	}
 
+	// Adjust the size of the About Box to accomodate the text
 	labelAbout->setText(AboutBoxText);		
 	QSize mysize = labelAbout->sizeHint();
 	AboutBox->setFixedHeight(mysize.height() + 60);
 }
 
+// Check how game ended - New Game request or Game Over
 void MainWindow::HandleEndGame()
 {
+	// Game Over scenario
 	if(labelGameStatus->text() == "Game Over")
 	{
+		// Change insurance buttons to handle game over response
 		disconnect(YesButton, SIGNAL(clicked()), ButtonMapping, SLOT(map()));
 		disconnect(NoButton, SIGNAL(clicked()), ButtonMapping, SLOT(map()));
 		connect(YesButton, SIGNAL(clicked()), this, SLOT(MakeConnections()));
 		connect(NoButton, SIGNAL(clicked()), qApp, SLOT(quit()));
+		// Reposition them and display
 		YesButton->setGeometry(200*XScale, 360*YScale, 100*XScale, 37*YScale);
 		NoButton->setGeometry(320*XScale, 360*YScale, 100*XScale, 37*YScale);
 		YesButton->setVisible(true);
@@ -544,12 +555,14 @@ void MainWindow::HandleEndGame()
 		YesButton->raise();
 		NoButton->raise();
 	}
+	// New Game requested
 	else
 	{
 		MakeConnections();
 	}
 }
 
+// Display About Box after menu call
 void MainWindow::DisplayAboutBox()
 {
 	ChangeAboutBoxText(1);
