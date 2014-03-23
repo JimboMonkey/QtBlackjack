@@ -315,7 +315,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 	AboutBox->setWindowTitle("About Blackjack");
 	AboutBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
-	QPixmap AboutBoxPixMap("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/JimboFace.gif");
+	QPixmap AboutBoxPixMap(":/Images/JimboFace.gif");
 	AboutBoxPixMap = AboutBoxPixMap.scaled(100, 100);
 
 	labelAboutPicture = new QLabel(AboutBox);
@@ -451,7 +451,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 	// Connect the signal map to the game thread
 	connect(ButtonMapping, SIGNAL(mapped(int)), myThread, SLOT(ChoiceMade(int)));
 
-	
 	MakeConnections();
 }
 
@@ -496,13 +495,13 @@ void MainWindow::ChangeAboutBoxText(int TextSet)
 	LicenceButton->show();
 	CreditsButton->show();
 	AboutButton->show();
-	QPixmap LicencePixMap("/home/jimbo/Dropbox/QtProjects/BlackJackVersionCtrl/GPLV3.png");
+	QPixmap LicencePixMap(":/Images/GPLV3.png");
 	LicencePixMap = LicencePixMap.scaled(127, 51);
 
-	QPixmap AboutPixMap("/home/jimbo/Dropbox/QtProjects/BlackJackVersionCtrl/cards_med.png");
+	QPixmap AboutPixMap(":/Images/AboutCards.png");
 	AboutPixMap = AboutPixMap.scaled(100, 100);	
 
-	QPixmap CreditsPixMap("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/JimboFace.gif");
+	QPixmap CreditsPixMap(":/Images/JimboFace.gif");
 	CreditsPixMap = CreditsPixMap.scaled(100, 100);		
 
 	switch (TextSet)
@@ -594,15 +593,15 @@ void MainWindow::ResultText(bool BustVisible, bool DealerBustVisible, bool Black
 	{
 		if(BustVisible == true or DealerBustVisible == true)
 		{
-			SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Bust.mp3"));
+			SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Bust.mp3").absoluteFilePath()));
 		}
 		else if(BlackjackVisible == true)
 		{
-			SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Yeah.mp3"));
+			SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Yeah.mp3").absoluteFilePath()));
 		}
 		else if(DealerBlackjackVisible == true)
 		{
-			SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Gasp.mp3"));
+			SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Gasp.mp3").absoluteFilePath()));
 		}
 		SoundFX->play();
 	}
@@ -620,7 +619,7 @@ void MainWindow::UpdatePlayersHand(QString LoadCardName, int CardPosition)
 	// ie not during the initial draw
 	if(CardPosition > 1)
 	{
-		SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/DrawCard.mp3"));
+		SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/DrawCard.mp3").absoluteFilePath()));
 		// Only play if sound is enabled
 		if (ToggleSound->isChecked())
 		{
@@ -664,7 +663,7 @@ void MainWindow::UpdateDealersHand(QString LoadCardName, int CardPosition)
 	// ie not during the initial draw
 	if(CardPosition > 0 and LoadCardName != "DealerCards/CardBack.png")
 	{
-		SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/DrawCard.mp3"));
+		SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/DrawCard.mp3").absoluteFilePath()));
 		// Only play if sound is enabled
 		if (ToggleSound->isChecked())
 		{
@@ -693,7 +692,7 @@ void MainWindow::PlayWinSound()
 	// Only play if sound is enabled
 	if (ToggleSound->isChecked())
 	{
-		SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Ching.mp3"));
+		SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Ching.mp3").absoluteFilePath()));
 		SoundFX->play();
 	}
 }
@@ -704,7 +703,7 @@ void MainWindow::PlayLoseSound()
 	// Only play if sound is enabled
 	if (ToggleSound->isChecked())
 	{
-		SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Punch.mp3"));
+		SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Punch.mp3").absoluteFilePath()));
 		SoundFX->play();
 	}
 }
@@ -727,13 +726,13 @@ void MainWindow::PlayChipSound()
 		switch (RandomNumber)
 		{
 			case 1:
-				SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip.mp3"));
+				SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Chip.mp3").absoluteFilePath()));
 				break;
 			case 2:
-				SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip2.mp3"));
+				SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Chip2.mp3").absoluteFilePath()));
 				break;
 			case 3:
-				SoundFX->setCurrentSource(QUrl("/home/jimbo/Dropbox/QtProjects/BlackJackNewGUI/Sounds/Chip3.mp3"));
+				SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Chip3.mp3").absoluteFilePath()));
 				break;
 		}
 		// Play the selected sound
