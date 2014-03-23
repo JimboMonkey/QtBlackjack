@@ -46,19 +46,19 @@ void ChipPile::populate(int ChipValue)
 	switch (ChipValue)
 	{
 		case 5:
-			BettingChip->setPixmap(QPixmap("images/RedChipCroppedSmall.gif").scaledToWidth(88*XScalingFactor));
+			BettingChip->setPixmap(QPixmap(":/Images/RedChipCroppedSmall.gif").scaledToWidth(88*XScalingFactor));
 			break;
 		case 10:
-			BettingChip->setPixmap(QPixmap("images/BlueChipCroppedSmall.gif").scaledToWidth(88*XScalingFactor));
+			BettingChip->setPixmap(QPixmap(":/Images/BlueChipCroppedSmall.gif").scaledToWidth(88*XScalingFactor));
 			break;
 		case 25:
-			BettingChip->setPixmap(QPixmap("images/GreenChipCroppedSmall.gif").scaledToWidth(88*XScalingFactor));
+			BettingChip->setPixmap(QPixmap(":/Images/GreenChipCroppedSmall.gif").scaledToWidth(88*XScalingFactor));
 			break;
 		case 50:
-			BettingChip->setPixmap(QPixmap("images/OrangeChipCroppedSmall.gif").scaledToWidth(88*XScalingFactor));
+			BettingChip->setPixmap(QPixmap(":/Images/OrangeChipCroppedSmall.gif").scaledToWidth(88*XScalingFactor));
 			break;
 		case 100:
-			BettingChip->setPixmap(QPixmap("images/BlackChipCroppedSmall.gif").scaledToWidth(88*XScalingFactor));
+			BettingChip->setPixmap(QPixmap(":/Images/BlackChipCroppedSmall.gif").scaledToWidth(88*XScalingFactor));
 			break;
 	}	
 
