@@ -490,6 +490,7 @@ void MainWindow::HideHandValues()
 	labelDealersHandValue->setVisible(false);
 }
 
+// Change the text and icon displayed in the About Box depending on button selection
 void MainWindow::ChangeAboutBoxText(int TextSet)
 {
 	LicenceButton->show();
