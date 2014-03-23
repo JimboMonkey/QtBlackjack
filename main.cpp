@@ -35,8 +35,8 @@ int main(int argc, char *argv[])
 
 	// Setup the window name, icon, cursor, and background
     window.setWindowTitle("Blackjack");
-    window.setWindowIcon(QIcon("Icon.png"));
-    window.setStyleSheet("MainWindow {border-image: url(Background4.png)}");
+    window.setWindowIcon(QIcon(":/Images/Icon.png"));
+    window.setStyleSheet("MainWindow {border-image: url(:/Images/Background4.png)}");
     window.setCursor(Qt::OpenHandCursor);
     window.show();
 	return app.exec();
