@@ -1,32 +1,29 @@
 <RCC>
-    <qresource prefix="/Images">
-        <file>BustText.gif</file>
-        <file>StatusBubble.png</file>
-        <file>Background4.png</file>
-        <file>Bet_Ring2.gif</file>
-        <file>StackSpot.png</file>
-        <file>DoneGreenButtonSmall.png</file>
-        <file>DoneRedButtonSmall.png</file>
-        <file>DoubleButtonSmall.png</file>
-        <file>HitButtonSmall.png</file>
-        <file>NoButtonSmall.png</file>
-        <file>HandValueSpot.png</file>
-        <file>SplitButtonSmall.png</file>
-        <file>StandButtonSmall.png</file>
-        <file>SurrenderButtonSmall.png</file>
-        <file>YesButtonSmall.png</file>
-        <file>BlackjackText.gif</file>
-        <file>ResultsSummary.gif</file>
-    </qresource>
-    <qresource prefix="/Sounds">
-        <file>Yeah.mp3</file>
-        <file>DrawCard.mp3</file>
-        <file>Bust.mp3</file>
-        <file>Ching.mp3</file>
-        <file>Chip.mp3</file>
-        <file>Chip3.mp3</file>
-        <file>Chip2.mp3</file>
-        <file>Gasp.mp3</file>
-        <file>Punch.mp3</file>
+    <qresource prefix="/">
+        <file>Images/DoneGreenButtonSmall.png</file>
+        <file>Images/NoButtonSmall.png</file>
+        <file>Images/HitButtonSmall.png</file>
+        <file>Images/SplitButtonSmall.png</file>
+        <file>Images/StandButtonSmall.png</file>
+        <file>Images/YesButtonSmall.png</file>
+        <file>Images/SurrenderButtonSmall.png</file>
+        <file>Images/RedChipCroppedSmall.gif</file>
+        <file>Images/BlueChipCroppedSmall.gif</file>
+        <file>Images/OrangeChipCroppedSmall.gif</file>
+        <file>Images/GreenChipCroppedSmall.gif</file>
+        <file>Images/BlackChipCroppedSmall.gif</file>
+        <file>Images/HandValueSpot.png</file>
+        <file>Images/StackSpot.png</file>
+        <file>Images/StatusBubble.png</file>
+        <file>Images/Background4.png</file>
+        <file>Images/Bet_Ring2.gif</file>
+        <file>Images/BustText.gif</file>
+        <file>Images/BlackjackText.gif</file>
+        <file>Images/ResultsSummary.gif</file>
+        <file>Images/Icon.png</file>
+        <file>Images/JimboFace.gif</file>
+        <file>Images/GPLV3.png</file>
+        <file>Images/AboutCards.png</file>
+        <file>Images/DoubleButtonSmall.png</file>
     </qresource>
 </RCC>
