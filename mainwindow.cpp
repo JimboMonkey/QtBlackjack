@@ -18,6 +18,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 	// it easier to move them together
 	PlayersCards = new QGroupBox(this);
 	DealersCards = new QGroupBox(this);
+	
+	// Corrected schoolboy error - RG21-05-2014
+	PlayersCards->setFlat(true);
+	DealersCards->setFlat(true);
 
 	// Set the size and geometry of each card hand container
 	PlayersCards->setGeometry(195*XScale, 310*YScale, 300*XScale, 300*YScale);
