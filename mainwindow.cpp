@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 	// Group the sets of cards to make
 	// it easier to move them together
 	PlayersCards = new QGroupBox(this);
-	DealersCards = new QGroupBox(this)
+	DealersCards = new QGroupBox(this);
 	
 	// Corrected schoolboy error - RG21-05-2014
 	PlayersCards->setFlat(true);
