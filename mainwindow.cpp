@@ -452,6 +452,13 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 	// Connect the signal map to the game thread
 	connect(ButtonMapping, SIGNAL(mapped(int)), myThread, SLOT(ChoiceMade(int)));
 
+	// Chip piles need re-raising to be clickable on some systems
+	FivePile->raise();
+	TenPile->raise();
+	TwentyFivePile->raise();
+	FiftyPile->raise();
+	HundredPile->raise();
+
 	// Initiate a new game
 	MakeConnections();
 }
