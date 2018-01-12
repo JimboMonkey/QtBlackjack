@@ -69,7 +69,7 @@ void GameThread::SeatPlayers(Table& BlackJackTable)
 }
 
 // Collect bets from every player
-void GameThread::CollectBets(Table& BlackJackTable)
+void GameThread::CollectBets()
 {
 	QEventLoop eventLoop;
 	connect(this, SIGNAL(BetDone()), &eventLoop, SLOT(quit()));
@@ -740,7 +740,7 @@ void GameThread::run()
 	do
 	{
 		/* Collect bets from all players at the table*/
-		CollectBets(BlackJackTable);
+		CollectBets();
 
 		if(CheckChoice() != 8)
 		{

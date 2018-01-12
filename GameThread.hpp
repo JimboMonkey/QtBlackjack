@@ -17,7 +17,7 @@ class GameThread: public QThread
 		void run(); // this is virtual method, we must implement it in our subclass of QThread
 		void MySleep(int Seconds);
 		void SeatPlayers(Table& BlackJackTable);
-		void CollectBets(Table& BlackJackTable);
+		void CollectBets();
 		void InitialDeal(Table& BlackJackTable, Croupier& Dealer);
 		void InsuranceOffers(Table& BlackJackTable, Croupier& Dealer);
 		bool CheckForBlackJack(Table& BlackJackTable, Croupier& Dealer);
