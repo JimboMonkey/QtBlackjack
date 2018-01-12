@@ -7,6 +7,7 @@
 TARGET = blackjack
 TEMPLATE = app
 
+# Comment out the line below to enable debugging
 DEFINES += QT_NO_DEBUG_OUTPUT
 
 SOURCES += main.cpp\
