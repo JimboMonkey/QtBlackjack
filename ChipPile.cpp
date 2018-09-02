@@ -223,7 +223,7 @@ void ChipPile::mousePressEvent(QMouseEvent *event)
 	bool UsedValue = child->CheckChipUsed();
 
 	// Check whether chip is on a bet or stack pile
-	if((ListChips.size() - 1) != -1)
+	if(ListChips.size() > 0)
 	{
 		// Chip is on the bet pile
 		pos = (125 - ((ListChips.size() - 1) * (8*YScalingFactor)));
