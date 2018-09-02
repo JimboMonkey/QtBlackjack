@@ -351,7 +351,7 @@ bool GameThread::PlayersPlay(Table& BlackJackTable, Croupier& Dealer)
 					CurrentBox->TakeCard(DealtCard);
 					QString CardName = DealtCard.GetName();
 					QString CardSuit = DealtCard.GetSuit();
-					QString LoadCardName = "PlayerCards/" + CardName + CardSuit + ".png";
+					QString LoadCardName = ":/PlayerCards/" + CardName + CardSuit + ".png";
 
 					/* If the hit causes them to go bust */
 					if(CurrentBox->CheckHand() > 21)

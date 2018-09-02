@@ -635,10 +635,8 @@ void MainWindow::ResultText(bool BustVisible, bool DealerBustVisible, bool Black
 // Add a card to the player's hand.  Adjust the hand position to keep it central
 void MainWindow::UpdatePlayersHand(QString LoadCardName, int CardPosition)
 {
-	QImage CardImage;
+	QImage CardImage(LoadCardName);
 	int NewHandPosition;
-
-	CardImage.load(LoadCardName);
 
 	// Only play the draw card sound if the card is drawn during play
 	// ie not during the initial draw
@@ -679,14 +677,12 @@ void MainWindow::UpdatePlayersHand(QString LoadCardName, int CardPosition)
 // Add a card to the dealer's hand.  Adjust the hand position to keep it central
 void MainWindow::UpdateDealersHand(QString LoadCardName, int CardPosition)
 {
-	QImage CardImage;
+    QImage CardImage(LoadCardName);
 	int NewHandPosition;
-
-	CardImage.load(LoadCardName);	
 
 	// Only play the draw card sound if the card is drawn during play
 	// ie not during the initial draw
-	if(CardPosition > 0 and LoadCardName != "DealerCards/CardBack.png")
+	if(CardPosition > 0 and LoadCardName != ":/DealerCards/CardBack.png")
 	{
 		SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/DrawCard.mp3").absoluteFilePath()));
 		// Only play if sound is enabled
