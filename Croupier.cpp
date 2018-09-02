@@ -130,9 +130,9 @@ void Croupier::InitialStatus()
 {
 	QString CardName = Hand.front().GetName();
 	QString CardSuit = Hand.front().GetSuit();
-	QString LoadCardName = "DealerCards/" + CardName + CardSuit + ".png";
+	QString LoadCardName = ":/DealerCards/" + CardName + CardSuit + ".png";
 	emit updateDealersHand(LoadCardName, 0);
-	emit updateDealersHand("DealerCards/CardBack.png", 1);
+	emit updateDealersHand(":/DealerCards/CardBack.png", 1);
 }
 
 /* State the dealer's hand */
@@ -160,7 +160,7 @@ void Croupier::ListHand()
 		qDebug() << "  " << Hand.at(i).GetName () << " of " << Hand.at(i).GetSuit() << endl;
 		QString CardName = Hand.at(i).GetName();
 		QString CardSuit = Hand.at(i).GetSuit();
-		QString LoadCardName = "DealerCards/" + CardName + CardSuit + ".png";
+		QString LoadCardName = ":/DealerCards/" + CardName + CardSuit + ".png";
 		emit updateDealersHand(LoadCardName, i);
 	}
 }

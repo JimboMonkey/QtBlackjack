@@ -16,7 +16,7 @@ void Participant::ListHand()
 	{
 		QString CardName = Hand.at(i).GetName();
 		QString CardSuit = Hand.at(i).GetSuit();
-		QString LoadCardName = "PlayerCards/" + CardName + CardSuit + ".png";
+		QString LoadCardName = ":/PlayerCards/" + CardName + CardSuit + ".png";
 		emit updatePlayersHand(LoadCardName, i);	
 	}
 }
