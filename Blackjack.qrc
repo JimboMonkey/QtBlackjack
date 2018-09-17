@@ -133,14 +133,14 @@
         <file>DealerCards/TwoDiamonds.png</file>
         <file>DealerCards/TwoHearts.png</file>
         <file>DealerCards/TwoSpades.png</file>
-        <file>Sounds/Bust.mp3</file>
-        <file>Sounds/Ching.mp3</file>
-        <file>Sounds/Chip2.mp3</file>
-        <file>Sounds/Chip3.mp3</file>
-        <file>Sounds/Chip.mp3</file>
-        <file>Sounds/DrawCard.mp3</file>
-        <file>Sounds/Gasp.mp3</file>
-        <file>Sounds/Punch.mp3</file>
-        <file>Sounds/Yeah.mp3</file>
+        <file>Sounds/Bust.wav</file>
+        <file>Sounds/Ching.wav</file>
+        <file>Sounds/Chip2.wav</file>
+        <file>Sounds/Chip3.wav</file>
+        <file>Sounds/Chip.wav</file>
+        <file>Sounds/DrawCard.wav</file>
+        <file>Sounds/Gasp.wav</file>
+        <file>Sounds/Punch.wav</file>
+        <file>Sounds/Yeah.wav</file>
     </qresource>
 </RCC>
