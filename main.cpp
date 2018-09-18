@@ -1,5 +1,5 @@
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include "mainwindow.h"
 #include <QIcon>
 
@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
 	// Create the application and window and name it
 	QApplication app(argc, argv);
-	// The app name needs to be set for the phonon to
+	// The app name was needed for the old phonon sound to
 	// "export audio output names through the DBUS interface"
 	app.setApplicationName("Blackjack");
 	MainWindow window;
