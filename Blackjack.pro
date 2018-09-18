@@ -35,6 +35,7 @@ HEADERS  += mainwindow.h\
 			Chip.h\
 			ClickableLabel.hpp
 
-QT += phonon
+QT += widgets
+QT += multimedia
 
 RESOURCES = Blackjack.qrc
