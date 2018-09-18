@@ -7,16 +7,15 @@
 #include <QGroupBox>
 #include <QThread>
 #include <QLabel>
+#include <QSound>
 
-#include <QtGui>
+#include <QtWidgets>
 
 #include "GameThread.hpp"
 
 #include "ClickableLabel.hpp"
 #include "ChipPile.hpp"
 
-#include <phonon/audiooutput.h>
-#include <phonon/mediaobject.h>
 
 class MainWindow: public QMainWindow 
 {
@@ -98,8 +97,17 @@ class MainWindow: public QMainWindow
 		QPushButton *CreditsButton;
 		QPushButton *AboutButton;
 
-		// Sound FX object
-		Phonon::MediaObject* SoundFX;
+		// Sound file locations
+		QString DrawFile;
+		QString BustFile;
+		QString GaspFile;
+		QString YeahFile;
+		QString DealerDrawFile;
+		QString PunchFile;
+		QString ChipFile;
+		QString ChipFile2;
+		QString ChipFile3;
+		QString ChingFile;
 
 	private slots:
 		void UpdateDealersHand(QString LoadCardName, int CardPosition);
@@ -123,6 +131,7 @@ class MainWindow: public QMainWindow
 		void DisplayAboutBox();
 		void MakeConnections();
 		void ChangeAboutBoxText(int TextSet);
+		void PlaySound(QString SoundFile);
 };
 
 #endif
