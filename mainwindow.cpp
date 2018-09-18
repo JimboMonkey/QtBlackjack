@@ -10,18 +10,16 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 	XScale = Screen.width() / 1920.0;
 	YScale = Screen.height() / 1080.0;
 
-	// Setup sound object
-	SoundFX = new Phonon::MediaObject(this);
-	createPath(SoundFX, new Phonon::AudioOutput(Phonon::MusicCategory, this));
-
 	// Group the sets of cards to make
 	// it easier to move them together
 	PlayersCards = new QGroupBox(this);
 	DealersCards = new QGroupBox(this);
-	
-	// Corrected schoolboy error - RG21-05-2014
-	PlayersCards->setFlat(true);
-	DealersCards->setFlat(true);
+
+	// Use a stylesheet to remove the group box borders
+	PlayersCards->setObjectName("PlayersCardsGroupBox");
+	DealersCards->setObjectName("DealersCardsGroupBox");
+	PlayersCards->setStyleSheet("#PlayersCardsGroupBox{border:0px;}");
+	DealersCards->setStyleSheet("#DealersCardsGroupBox{border:0px;}");
 
 	// Set the size and geometry of each card hand container
 	PlayersCards->setGeometry(195*XScale, 310*YScale, 300*XScale, 300*YScale);
@@ -46,6 +44,18 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 		PlayersHand[CardNumber]->setGeometry(PlayerHandPosition*XScale, 0, 191*XScale, 250*YScale);
 		PlayersHand[CardNumber]->lower();
 	}
+
+	// Sound file locations
+	DrawFile = ":/Sounds/DrawCard.wav";
+	BustFile = ":/Sounds/Bust.wav";
+	GaspFile = ":/Sounds/Gasp.wav";
+	YeahFile = ":/Sounds/Yeah.wav";
+	DealerDrawFile = ":/Sounds/DrawCard.wav";
+	PunchFile = ":/Sounds/Punch.wav";
+	ChipFile = ":/Sounds/Chip.wav";
+	ChipFile2 = ":/Sounds/Chip2.wav";
+	ChipFile3 = ":/Sounds/Chip3.wav";
+	ChingFile = ":/Sounds/Ching.wav";
 
 	// Create a set of menu actions
   	NewGame = new QAction("&New Game", this);
@@ -318,11 +328,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 	AboutBox->setWindowTitle("About Blackjack");
 	AboutBox->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
 
-//	QPixmap AboutBoxPixMap(":/Images/JimboFace.gif");
-//	AboutBoxPixMap = AboutBoxPixMap.scaled(100, 100);
-
 	labelAboutPicture = new QLabel(AboutBox);
-//	labelAboutPicture->setPixmap(AboutBoxPixMap);
 	labelAboutPicture->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
 	labelAbout = new QLabel(AboutBox);
@@ -363,7 +369,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
 	TextLayout->addLayout(PicLayout);
 	TextLayout->addWidget(labelAbout);
-
 
 	ButtonLayout->addWidget(LicenceButton);
 	ButtonLayout->addWidget(CreditsButton);
@@ -580,6 +585,14 @@ void MainWindow::DisplayAboutBox()
 	AboutBox->show();
 }
 
+void MainWindow::PlaySound(QString SoundFile)
+{
+	if (ToggleSound->isChecked())
+	{
+		QSound::play(SoundFile);
+	}
+}
+
 void MainWindow::HideButtons(bool HitVisible, bool StandVisible, bool SurrenderVisible, bool DoubleVisible, bool SplitVisible, bool YesVisible, bool NoVisible, bool DoneVisible)
 {
 	HitButton->setVisible(HitVisible);
@@ -613,22 +626,17 @@ void MainWindow::ResultText(bool BustVisible, bool DealerBustVisible, bool Black
 	labelBlackjackText->raise();
 	labelDealersBlackjackText->raise();
 
-	// Only play if sound is enabled
-	if (ToggleSound->isChecked())
+	if(BustVisible == true or DealerBustVisible == true)
 	{
-		if(BustVisible == true or DealerBustVisible == true)
-		{
-			SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Bust.mp3").absoluteFilePath()));
-		}
-		else if(BlackjackVisible == true)
-		{
-			SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Yeah.mp3").absoluteFilePath()));
-		}
-		else if(DealerBlackjackVisible == true)
-		{
-			SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Gasp.mp3").absoluteFilePath()));
-		}
-		SoundFX->play();
+		PlaySound(BustFile);
+	}
+	else if(BlackjackVisible == true)
+	{
+		PlaySound(YeahFile);
+	}
+	else if(DealerBlackjackVisible == true)
+	{
+		PlaySound(GaspFile);
 	}
 }
 
@@ -642,12 +650,7 @@ void MainWindow::UpdatePlayersHand(QString LoadCardName, int CardPosition)
 	// ie not during the initial draw
 	if(CardPosition > 1)
 	{
-		SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/DrawCard.mp3").absoluteFilePath()));
-		// Only play if sound is enabled
-		if (ToggleSound->isChecked())
-		{
-			SoundFX->play();
-		}
+		PlaySound(DrawFile);
 	}
 
 	// Load the image for the given card into the given position (and scale if needed)
@@ -684,12 +687,7 @@ void MainWindow::UpdateDealersHand(QString LoadCardName, int CardPosition)
 	// ie not during the initial draw
 	if(CardPosition > 0 and LoadCardName != ":/DealerCards/CardBack.png")
 	{
-		SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/DrawCard.mp3").absoluteFilePath()));
-		// Only play if sound is enabled
-		if (ToggleSound->isChecked())
-		{
-			SoundFX->play();
-		}
+		PlaySound(DealerDrawFile);
 	}
 
 	// Load the image for the given card into the given position (and scale if needed)
@@ -710,23 +708,13 @@ void MainWindow::UpdateDealersHand(QString LoadCardName, int CardPosition)
 // Play a win sound
 void MainWindow::PlayWinSound()
 {
-	// Only play if sound is enabled
-	if (ToggleSound->isChecked())
-	{
-		SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Ching.mp3").absoluteFilePath()));
-		SoundFX->play();
-	}
+	PlaySound(ChingFile);
 }
 
 // Play a fail sound
 void MainWindow::PlayLoseSound()
 {
-	// Only play if sound is enabled
-	if (ToggleSound->isChecked())
-	{
-		SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Punch.mp3").absoluteFilePath()));
-		SoundFX->play();
-	}
+	PlaySound(PunchFile);
 }
 
 // Play a random chip movement sound
@@ -734,30 +722,24 @@ void MainWindow::PlayChipSound()
 {
 	int RandomNumber;
 
-	// Only play if sound is enabled
-	if (ToggleSound->isChecked())
+	// Initialize random seed from time
+	srand (time(NULL));
+
+	// Generate a random number between 1 and 3
+	RandomNumber = ((rand() % 3) + 1);
+
+	// Pick one of 3 sounds
+	switch (RandomNumber)
 	{
-		// Initialize random seed from time
-		srand (time(NULL));
-
-		// Generate a random number between 1 and 3
-		RandomNumber = ((rand() % 3) + 1);
-
-		// Pick one of 3 sounds
-		switch (RandomNumber)
-		{
-			case 1:
-				SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Chip.mp3").absoluteFilePath()));
-				break;
-			case 2:
-				SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Chip2.mp3").absoluteFilePath()));
-				break;
-			case 3:
-				SoundFX->setCurrentSource(QUrl(QFileInfo("Sounds/Chip3.mp3").absoluteFilePath()));
-				break;
-		}
-		// Play the selected sound
-		SoundFX->play();
+		case 1:
+			PlaySound(ChipFile);
+			break;
+		case 2:
+			PlaySound(ChipFile2);
+			break;
+		case 3:
+			PlaySound(ChipFile3);
+			break;
 	}	
 }
 
