@@ -1,4 +1,4 @@
-#include <QtGui>
+#include <QtWidgets>
 
 #include <stdio.h>      /* printf, scanf, puts, NULL */
 #include <stdlib.h>     /* srand, rand */
@@ -26,7 +26,7 @@ ChipPile::ChipPile(QWidget *parent, bool AcceptDrops): QStackedWidget(parent)
 	YScalingFactor = hScale;
 
 	setMinimumSize(200, 220);
-	setFrameStyle(QFrame::Sunken | QFrame::StyledPanel);
+	setFrameStyle(QFrame::NoFrame);
 	setAcceptDrops(AcceptDrops);
 	setFrameShape (NoFrame);
 	Active = true;
