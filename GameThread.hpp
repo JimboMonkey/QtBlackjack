@@ -1,8 +1,7 @@
 #ifndef GAMETHREAD_H
 #define GAMETHREAD_H
 
-#include <QtGui>
-
+#include <QtWidgets>
 #include "Table.hpp"
 #include "Croupier.hpp"
 #include "Box.hpp"
