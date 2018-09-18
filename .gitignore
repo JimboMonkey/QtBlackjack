@@ -3,3 +3,4 @@ blackjack
 moc_*
 *.o
 qrc_Blackjack.cpp
+Makefile
