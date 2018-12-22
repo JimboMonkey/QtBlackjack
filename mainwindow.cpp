@@ -530,7 +530,7 @@ void MainWindow::ChangeAboutBoxText(int TextSet)
 	switch (TextSet)
 	{
 		case 1:
-			AboutBoxText = "<b><i><font size = 4>Blackjack</i></b><br><br>Another JimboMonkey Production<br>Version 1.0<br><br>Copyright \x00A9 2014 JimboMonkey Productions<br>";
+			AboutBoxText = "<b><i><font size = 4>Blackjack</i></b><br><br>Another JimboMonkey Production<br>Version 1.0<br><br>Copyright \u24B8 2014 JimboMonkey Productions<br>";
 			labelAboutPicture->setPixmap(AboutPixMap);
 			AboutButton->hide();
 			break;
